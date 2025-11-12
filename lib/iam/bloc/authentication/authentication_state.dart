@@ -1,4 +1,5 @@
 import 'package:byker_z_mobile/iam/models/sign-in_response.dart';
+import 'package:byker_z_mobile/iam/models/sign-up_response.dart';
 
 abstract class AuthenticationState {}
 
@@ -13,7 +14,7 @@ class SignInSuccess extends AuthenticationState {
 }
 
 class SignUpSuccess extends AuthenticationState {
-  final SignUpSuccess response;
+  final SignUpResponse response;
 
   SignUpSuccess(this.response);
 }
