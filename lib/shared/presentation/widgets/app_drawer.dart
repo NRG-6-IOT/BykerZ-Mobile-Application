@@ -23,7 +23,7 @@ class AppDrawer extends StatelessWidget {
         children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.deepPurple,
+              color: Color(0xFFFF6B35),
             ),
             child: Text(
               'BykerZ',
@@ -53,7 +53,9 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Vehicles'),
             onTap: () => navigateTo(context, const Vehicles()),
           ),
-          const Divider(),
+          const Divider(
+            thickness: 2,
+          ),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('Log Out', style: TextStyle(color: Colors.red)),
