@@ -1,4 +1,7 @@
+import 'package:byker_z_mobile/shared/presentation/pages/dashboard.dart';
 import 'package:flutter/material.dart';
+
+
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -7,9 +10,8 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
                 'Login Page',
@@ -23,6 +25,10 @@ class Login extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Dashboard()),
+                  );
                 },
                 child: Text('Login'),
               ),

@@ -7,9 +7,8 @@ class Vehicles extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
                 'Vehicles Page',
