@@ -8,7 +8,6 @@ import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
 
 import '../../../shared/client/api.client.dart';
-import '../../models/sign-in_request.dart';
 import '../../models/sign-in_response.dart';
 import '../../models/sign-up_response.dart';
 
@@ -22,6 +21,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }) : super(AuthenticationInitial()) {
     on<SignInEvent>(_onSignInEvent);
     on<SignUpEvent>(_onSignUpEvent);
+    on<SignOutEvent>(_onSignOutEvent);
     on<ResetAuthenticationStateEvent>(_onResetAuthenticationStateEvent);
   }
 
@@ -89,6 +89,22 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       emit(AuthenticationFailure('Error: $e'));
     }
   }
+
+  Future<void> _onSignOutEvent(SignOutEvent event, Emitter<AuthenticationState> emit) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.remove('auth_token');
+      await prefs.remove('role_id');
+
+      ApiClient.resetToken();
+
+      emit(AuthenticationInitial());
+    } catch (e) {
+      emit(AuthenticationFailure('Error during sign out: $e'));
+    }
+  }
+
 
   void _onResetAuthenticationStateEvent(ResetAuthenticationStateEvent event, Emitter<AuthenticationState> emit) {
     emit(AuthenticationInitial());

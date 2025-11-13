@@ -15,4 +15,6 @@ class SignUpEvent extends AuthenticationEvent {
   SignUpEvent({required this.request});
 }
 
+class SignOutEvent extends AuthenticationEvent {}
+
 class ResetAuthenticationStateEvent extends AuthenticationEvent {}
