@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:byker_z_mobile/shared/client/api.client.dart';
+import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
 import '../model/vehicle_model.dart';
 
 class VehicleService {
@@ -20,6 +21,15 @@ class VehicleService {
       return Vehicle.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     }
     throw Exception('Failed to fetch vehicle: ${response.statusCode} - ${response.body}');
+  }
+
+  Future<Vehicle> createVehicleForOwnerId(int ownerId, VehicleCreateRequest request) async {
+    final response = await ApiClient.post('vehicles/$ownerId', body: request.toJson());
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return Vehicle.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    }
+    throw Exception('Failed to create vehicle: ${response.statusCode} - ${response.body}');
   }
 }
 
