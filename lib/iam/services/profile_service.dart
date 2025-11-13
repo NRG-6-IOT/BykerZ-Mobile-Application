@@ -15,8 +15,4 @@ class ProfileService {
   Future<http.Response> getOwnerId(String userId) async {
     return await ApiClient.get('users/owner');
   }
-
-  Future<http.Response> getMechanicId(String userId) async {
-    return await ApiClient.get('users/mechanic');
-  }
 }
