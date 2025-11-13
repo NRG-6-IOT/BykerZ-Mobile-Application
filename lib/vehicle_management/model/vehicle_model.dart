@@ -49,29 +49,43 @@ class Model {
 
   factory Model.fromJson(Map<String, dynamic> json) {
     return Model(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      brand: json['brand'] as String,
-      modelYear: json['modelYear'] as String,
-      originCountry: json['originCountry'] as String,
-      producedAt: json['producedAt'] as String,
-      type: json['type'] as String,
-      displacement: json['displacement'] as String,
-      potency: json['potency'] as String,
-      engineType: json['engineType'] as String,
-      engineTorque: json['engineTorque'] as String,
-      weight: json['weight'] as String,
-      transmission: json['transmission'] as String,
-      brakes: json['brakes'] as String,
-      tank: json['tank'] as String,
-      seatHeight: json['seatHeight'] as String,
-      consumption: json['consumption'] as String,
-      price: json['price'] as String,
-      oilCapacity: json['oilCapacity'] as String,
-      connectivity: json['connectivity'] as String,
-      durability: json['durability'] as String,
-      octane: json['octane'] as String,
+      id: _parseInt(json['id']),
+      name: _parseString(json['name']),
+      brand: _parseString(json['brand']),
+      modelYear: _parseString(json['modelYear']),
+      originCountry: _parseString(json['originCountry']),
+      producedAt: _parseString(json['producedAt']),
+      type: _parseString(json['type']),
+      displacement: _parseString(json['displacement']),
+      potency: _parseString(json['potency']),
+      engineType: _parseString(json['engineType']),
+      engineTorque: _parseString(json['engineTorque']),
+      weight: _parseString(json['weight']),
+      transmission: _parseString(json['transmission']),
+      brakes: _parseString(json['brakes']),
+      tank: _parseString(json['tank']),
+      seatHeight: _parseString(json['seatHeight']),
+      consumption: _parseString(json['consumption']),
+      price: _parseString(json['price']),
+      oilCapacity: _parseString(json['oilCapacity']),
+      connectivity: _parseString(json['connectivity']),
+      durability: _parseString(json['durability']),
+      octane: _parseString(json['octane']),
     );
+  }
+
+  static int _parseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  static String _parseString(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    return value.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -119,12 +133,26 @@ class Vehicle {
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
-      id: json['id'] as int,
-      ownerId: json['ownerId'] as int,
+      id: _parseInt(json['id']),
+      ownerId: _parseInt(json['ownerId']),
       model: Model.fromJson(json['model'] as Map<String, dynamic>),
-      year: json['year'] as String,
-      plate: json['plate'] as String,
+      year: _parseString(json['year']),
+      plate: _parseString(json['plate']),
     );
+  }
+
+  static int _parseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  static String _parseString(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    return value.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -155,7 +183,7 @@ class Vehicle {
 
   @override
   String toString() {
-    return 'Vehicle(id: $id, ownerId: $ownerId, plate: $plate, year: $year, model: ${model?.brand ?? "N/A"} ${model?.name ?? ""})';
+    return 'Vehicle(id: $id, ownerId: $ownerId, plate: $plate, year: $year, model: ${model.brand ?? "N/A"} ${model.name ?? ""})';
   }
 
   @override
