@@ -1,4 +1,5 @@
 import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance.dart';
+import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance_card.dart';
 
 abstract class MaintenanceState {}
 
@@ -16,6 +17,16 @@ class MaintenancesLoaded extends MaintenanceState {
   final List<Maintenance> maintenances;
 
   MaintenancesLoaded(this.maintenances);
+}
+
+class MaintenanceCardsLoaded extends MaintenanceState {
+  final List<MaintenanceCard> scheduledMaintenances;
+  final List<MaintenanceCard> completedMaintenances;
+
+  MaintenanceCardsLoaded({
+    required this.scheduledMaintenances,
+    required this.completedMaintenances,
+  });
 }
 
 class MaintenanceCreated extends MaintenanceState {

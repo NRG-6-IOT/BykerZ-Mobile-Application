@@ -2,14 +2,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/bloc/maintenance/maintenance_event.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/bloc/maintenance/maintenance_state.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/services/maintenance_service.dart';
+import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart';
+import 'package:byker_z_mobile/iam/services/user_service.dart';
+import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance_card.dart';
+import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance.dart' as maintenance_model;
 
 class MaintenanceBloc extends Bloc<MaintenanceEvent, MaintenanceState> {
   final MaintenanceService maintenanceService;
+  final VehicleService vehicleService;
+  final UserService userService;
 
-  MaintenanceBloc({required this.maintenanceService}) : super(MaintenanceInitial()) {
+  MaintenanceBloc({
+    required this.maintenanceService,
+    required this.vehicleService,
+    required this.userService,
+  }) : super(MaintenanceInitial()) {
     on<FetchMaintenanceByIdEvent>(_onFetchMaintenanceById);
     on<FetchMaintenancesByMechanicIdEvent>(_onFetchMaintenancesByMechanicId);
     on<FetchMaintenancesByVehicleIdEvent>(_onFetchMaintenancesByVehicleId);
+    on<FetchMaintenancesByOwnerIdEvent>(_onFetchMaintenancesByOwnerId);
     on<CreateMaintenanceEvent>(_onCreateMaintenance);
     on<DeleteMaintenanceEvent>(_onDeleteMaintenance);
     on<UpdateMaintenanceStatusEvent>(_onUpdateMaintenanceStatus);
@@ -52,6 +63,72 @@ class MaintenanceBloc extends Bloc<MaintenanceEvent, MaintenanceState> {
       emit(MaintenancesLoaded(maintenances));
     } catch (e) {
       emit(MaintenanceError('Failed to fetch maintenances by vehicle: $e'));
+    }
+  }
+
+  Future<void> _onFetchMaintenancesByOwnerId(
+    FetchMaintenancesByOwnerIdEvent event,
+    Emitter<MaintenanceState> emit,
+  ) async {
+    emit(MaintenanceLoading());
+    try {
+      // 1. Get all vehicles for the owner
+      final vehicles = await vehicleService.getVehiclesByOwnerId(event.ownerId);
+
+      if (vehicles.isEmpty) {
+        emit(MaintenanceCardsLoaded(
+          scheduledMaintenances: [],
+          completedMaintenances: [],
+        ));
+        return;
+      }
+
+      // 2. Get maintenances for all vehicles
+      final List<MaintenanceCard> allCards = [];
+
+      for (final vehicle in vehicles) {
+        try {
+          final maintenances = await maintenanceService.getMaintenancesByVehicleId(vehicle.id);
+
+          // 3. Create cards and load additional data
+          for (final maintenance in maintenances) {
+            final card = MaintenanceCard(maintenance: maintenance);
+
+            // Load vehicle and mechanic data
+            try {
+              final mechanic = await userService.getUserById(maintenance.mechanicId);
+              allCards.add(card.copyWith(
+                vehicle: vehicle,
+                mechanic: mechanic,
+              ));
+            } catch (e) {
+              // Add card with vehicle but without mechanic if mechanic fetch fails
+              allCards.add(card.copyWith(vehicle: vehicle));
+            }
+          }
+        } catch (e) {
+          print('Error loading maintenances for vehicle ${vehicle.id}: $e');
+          // Continue with other vehicles even if one fails
+        }
+      }
+
+      // 4. Separate into scheduled and completed
+      final scheduled = allCards.where((card) =>
+        card.maintenance.state == maintenance_model.MaintenanceState.pending ||
+        card.maintenance.state == maintenance_model.MaintenanceState.inProgress
+      ).toList();
+
+      final completed = allCards.where((card) =>
+        card.maintenance.state == maintenance_model.MaintenanceState.completed ||
+        card.maintenance.state == maintenance_model.MaintenanceState.cancelled
+      ).toList();
+
+      emit(MaintenanceCardsLoaded(
+        scheduledMaintenances: scheduled,
+        completedMaintenances: completed,
+      ));
+    } catch (e) {
+      emit(MaintenanceError('Failed to fetch maintenances by owner: $e'));
     }
   }
 

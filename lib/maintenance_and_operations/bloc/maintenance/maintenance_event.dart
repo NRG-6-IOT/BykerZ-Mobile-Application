@@ -18,6 +18,12 @@ class FetchMaintenancesByVehicleIdEvent extends MaintenanceEvent {
   FetchMaintenancesByVehicleIdEvent(this.vehicleId);
 }
 
+class FetchMaintenancesByOwnerIdEvent extends MaintenanceEvent {
+  final int ownerId;
+
+  FetchMaintenancesByOwnerIdEvent(this.ownerId);
+}
+
 class CreateMaintenanceEvent extends MaintenanceEvent {
   final Map<String, dynamic> maintenanceData;
 
