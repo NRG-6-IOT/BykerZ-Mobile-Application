@@ -8,6 +8,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
 
   ExpenseBloc({required this.expenseService}) : super(ExpenseInitial()) {
     on<CreateExpenseEvent>(_onCreateExpense);
+    on<CreateExpenseForOwnerEvent>(_onCreateExpenseForOwner);
     on<FetchAllExpensesEvent>(_onFetchAllExpenses);
     on<FetchExpenseByIdEvent>(_onFetchExpenseById);
     on<DeleteExpenseEvent>(_onDeleteExpense);
@@ -19,8 +20,24 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   ) async {
     emit(ExpenseLoading());
     try {
-      final expense = await expenseService.createExpense(
+      final expense = await expenseService.createExpenseForUser(
         event.userId,
+        event.expenseData,
+      );
+      emit(ExpenseCreated(expense));
+    } catch (e) {
+      emit(ExpenseError('Failed to create expense: $e'));
+    }
+  }
+
+  Future<void> _onCreateExpenseForOwner(
+    CreateExpenseForOwnerEvent event,
+    Emitter<ExpenseState> emit,
+  ) async {
+    emit(ExpenseLoading());
+    try {
+      final expense = await expenseService.createExpenseForOwner(
+        event.ownerId,
         event.expenseData,
       );
       emit(ExpenseCreated(expense));

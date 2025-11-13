@@ -3,8 +3,20 @@ import 'package:byker_z_mobile/shared/client/api.client.dart';
 import '../model/expense.dart';
 
 class ExpenseService {
-  Future<Expense> createExpense(int userId, Map<String, dynamic> expenseData) async {
+  // Create expense for a user (old endpoint, kept for backward compatibility)
+  Future<Expense> createExpenseForUser(int userId, Map<String, dynamic> expenseData) async {
     final response = await ApiClient.post('expense/$userId', body: expenseData);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return Expense.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to create expense: ${response.statusCode} - ${response.body}');
+    }
+  }
+
+  // Create expense for an owner (new endpoint)
+  Future<Expense> createExpenseForOwner(int ownerId, Map<String, dynamic> expenseData) async {
+    final response = await ApiClient.post('expense/owner/$ownerId', body: expenseData);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return Expense.fromJson(jsonDecode(response.body));

@@ -10,6 +10,16 @@ class CreateExpenseEvent extends ExpenseEvent {
   });
 }
 
+class CreateExpenseForOwnerEvent extends ExpenseEvent {
+  final int ownerId;
+  final Map<String, dynamic> expenseData;
+
+  CreateExpenseForOwnerEvent({
+    required this.ownerId,
+    required this.expenseData,
+  });
+}
+
 class FetchAllExpensesEvent extends ExpenseEvent {}
 
 class FetchExpenseByIdEvent extends ExpenseEvent {
