@@ -4,10 +4,9 @@ import 'package:http/http.dart' as http;
 import '../models/wellness_metric_model.dart';
 
 class WellnessMetricDataSource {
-  final String baseUrl;
-  final String basePath = '/api/v1/metrics';
-
-  WellnessMetricDataSource({required this.baseUrl});
+  final String baseUrl= 'http://10.0.2.2:8080/api/v1/' ;
+  //final String baseUrl= 'https://backend-web-services-1.onrender.com/api/v1/' ;
+  final String basePath = 'metrics';
 
   // ✅ MÉTODO PARA OBTENER TOKEN (similar a tu TokenService)
   Future<String> _getToken() async {
@@ -15,7 +14,7 @@ class WellnessMetricDataSource {
     // Puedes usar SharedPreferences, SecureStorage, etc.
     // Ejemplo:
     // return await TokenService.getToken();
-    return 'your-token-here'; // Reemplaza con tu implementación real
+    return 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKb3NlIiwiaWF0IjoxNzYzMDMwMzcxLCJleHAiOjE3NjM2MzUxNzF9.WvUpxBjfqqUyJSW_X2P7q3OrnphqAxhD-D_e02kDL4Ta5tnDcmLHEBUq5wuvFW1-'; // Reemplaza con tu implementación real
   }
 
   // ✅ MÉTODO PARA HEADERS COMUNES
