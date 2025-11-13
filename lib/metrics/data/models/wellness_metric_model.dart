@@ -63,4 +63,37 @@ class WellnessMetricModel {
   bool getImpactDetected() {
     return impactDetected;
   }
+
+  //Nuevas
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'vehicleId': vehicleId,
+      'latitude': latitude,
+      'longitude': longitude,
+      'CO2Ppm': CO2Ppm,
+      'NH3Ppm': NH3Ppm,
+      'BenzenePpm': BenzenePpm,
+      'temperatureCelsius': temperatureCelsius,
+      'humidityPercentage': humidityPercentage,
+      'pressureHpa': pressureHpa,
+      'impactDetected': impactDetected,
+    };
+  }
+
+  factory WellnessMetricModel.fromEntity(WellnessMetric entity) {
+    return WellnessMetricModel(
+      id: entity.id,
+      vehicleId: entity.vehicleId,
+      latitude: entity.latitude,
+      longitude: entity.longitude,
+      CO2Ppm: entity.CO2Ppm,
+      NH3Ppm: entity.NH3Ppm,
+      BenzenePpm: entity.BenzenePpm,
+      temperatureCelsius: entity.temperatureCelsius,
+      humidityPercentage: entity.humidityPercentage,
+      pressureHpa: entity.pressureHpa,
+      impactDetected: entity.impactDetected,
+    );
+  }
 }
