@@ -11,6 +11,7 @@ import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart'
 import 'package:byker_z_mobile/iam/services/user_service.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance_card.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance.dart' as maintenance_model;
+import 'package:byker_z_mobile/maintenance_and_operations/presentation/helpers/navigation_helper.dart';
 
 class Maintenance extends StatelessWidget {
   const Maintenance({super.key});
@@ -332,10 +333,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(
+                    MaintenanceNavigationHelper.navigateToExpenseDetail(
                       context,
-                      '/expense-details',
-                      arguments: card.maintenance.expense!.id,
+                      expenseId: card.maintenance.expense!.id,
                     );
                   },
                   style: ElevatedButton.styleFrom(
