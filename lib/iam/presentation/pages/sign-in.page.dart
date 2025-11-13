@@ -1,7 +1,6 @@
 import 'package:byker_z_mobile/iam/bloc/authentication/authentication_bloc.dart';
 import 'package:byker_z_mobile/iam/bloc/authentication/authentication_event.dart';
 import 'package:byker_z_mobile/iam/bloc/authentication/authentication_state.dart';
-import 'package:byker_z_mobile/iam/presentation/pages/sign-up_page.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
 import 'package:byker_z_mobile/shared/presentation/pages/dashboard.dart';
@@ -167,42 +166,6 @@ class _SignInState extends State<SignInPage> {
                           fontSize: 20,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Builder(
-                      builder: (context) => ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider.value(
-                                value: context.read<AuthenticationBloc>(),
-                                child: const SignUpPage(),
-                              ),
-                            ),
-                          );
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                              const Color(0xFFFFFFFF)),
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
                       ),
                     ),

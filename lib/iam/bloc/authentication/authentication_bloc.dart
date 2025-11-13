@@ -9,7 +9,6 @@ import 'package:byker_z_mobile/iam/services/profile_service.dart';
 
 import '../../../shared/client/api.client.dart';
 import '../../models/sign-in_response.dart';
-import '../../models/sign-up_response.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationService authenticationService;
@@ -20,7 +19,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     required this.profileService
   }) : super(AuthenticationInitial()) {
     on<SignInEvent>(_onSignInEvent);
-    on<SignUpEvent>(_onSignUpEvent);
     on<SignOutEvent>(_onSignOutEvent);
     on<ResetAuthenticationStateEvent>(_onResetAuthenticationStateEvent);
   }
@@ -41,21 +39,14 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
         final profileResponse = await profileService.getProfile();
         if (profileResponse.statusCode == 200) {
-          // Obtain the sign in response roles list, and get the first element from it
-          if(signInResponse.roles.first == 'ROLE_OWNER') {
-            final roleIdResponse = await profileService.getOwnerId(signInResponse.id.toString());
-            if (roleIdResponse.statusCode == 200) {
-              final jsonResponse = json.decode(roleIdResponse.body);
-              final roleId = jsonResponse['ownerId'] as int;
-              await prefs.setInt('role_id', roleId);
-            }
-          } else if (signInResponse.roles.first == 'ROLE_MECHANIC') {
-            final roleIdResponse = await profileService.getMechanicId(signInResponse.id.toString());
-            if (roleIdResponse.statusCode == 200) {
-              final jsonResponse = json.decode(roleIdResponse.body);
-              final roleId = jsonResponse['mechanicId'] as int;
-              await prefs.setInt('role_id', roleId);
-            }
+          final roleIdResponse = await profileService.getOwnerId(signInResponse.id.toString());
+          if (roleIdResponse.statusCode == 200) {
+            final jsonResponse = json.decode(roleIdResponse.body);
+            final roleId = jsonResponse['ownerId'] as int;
+            await prefs.setInt('role_id', roleId);
+          } else {
+            emit(AuthenticationFailure('Error while obtaining role ID: ${roleIdResponse.statusCode}'));
+            return;
           }
 
           emit(SignInSuccess(signInResponse));
@@ -67,23 +58,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
       } else {
         emit(AuthenticationFailure('Sign in failed: ${response.statusCode}'));
-      }
-    } catch (e) {
-      emit(AuthenticationFailure('Error: $e'));
-    }
-  }
-
-  Future<void> _onSignUpEvent(SignUpEvent event, Emitter<AuthenticationState> emit) async {
-    emit(AuthenticationLoading());
-    try {
-      final response = await authenticationService.signUp(event.request);
-
-      if (response.statusCode == 201) {
-        final signUpResponse = SignUpResponse.fromJson(json.decode(response.body));
-        emit(SignUpSuccess(signUpResponse));
-      } else {
-        final error = json.decode(response.body)['message'] ?? 'Error: Couldn\'t register';
-        emit(AuthenticationFailure(error));
       }
     } catch (e) {
       emit(AuthenticationFailure('Error: $e'));
