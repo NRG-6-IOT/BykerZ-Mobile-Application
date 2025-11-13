@@ -2,6 +2,7 @@ import 'package:byker_z_mobile/iam/bloc/authentication/authentication_bloc.dart'
 import 'package:byker_z_mobile/iam/presentation/pages/sign-in.page.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
+import 'package:byker_z_mobile/maintenance_and_operations/presentation/pages/expense_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +31,17 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         home: const SignInPage(),
+        onGenerateRoute: (settings) {
+          // Handle /expense-details route with arguments
+          if (settings.name == '/expense-details') {
+            final expenseId = settings.arguments as int;
+            return MaterialPageRoute(
+              builder: (context) => ExpenseDetail(expenseId: expenseId),
+            );
+          }
+          // Return null for unknown routes (will show error)
+          return null;
+        },
       )
     );
   }
