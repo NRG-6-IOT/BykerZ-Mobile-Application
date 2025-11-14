@@ -180,7 +180,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Expense'),
-        backgroundColor: const Color(0xFFFF6B35),
+        backgroundColor: const Color(0xFF380800),
         foregroundColor: Colors.white,
       ),
       body: BlocListener<ExpenseBloc, ExpenseState>(
@@ -299,6 +299,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: DropdownButtonFormField<String>(
+                        value: _selectedItemType, // Changed from initialValue to value
                         decoration: const InputDecoration(
                           labelText: 'Item Type',
                           border: InputBorder.none,

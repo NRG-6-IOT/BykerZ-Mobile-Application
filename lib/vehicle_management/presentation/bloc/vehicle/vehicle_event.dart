@@ -1,5 +1,7 @@
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
 
+import '../../../model/vehicle_model.dart';
+
 abstract class VehicleEvent {}
 
 class FetchAllVehiclesFromOwnerIdEvent extends VehicleEvent {
@@ -11,11 +13,9 @@ class FetchAllVehiclesFromOwnerIdEvent extends VehicleEvent {
 }
 
 class CreateVehicleForOwnerIdEvent extends VehicleEvent {
-  final int ownerId;
   final VehicleCreateRequest request;
 
   CreateVehicleForOwnerIdEvent({
-    required this.ownerId,
     required this.request
   });
 }
@@ -26,4 +26,26 @@ class FetchVehicleByIdEvent extends VehicleEvent {
   FetchVehicleByIdEvent({
     required this.vehicleId
   });
+}
+
+class LoadVehicleCreateFormEvent extends VehicleEvent {}
+
+class SelectCreateBrandEvent extends VehicleEvent {
+  final String brand;
+  SelectCreateBrandEvent(this.brand);
+}
+
+class SelectCreateModelEvent extends VehicleEvent {
+  final Model model;
+  SelectCreateModelEvent(this.model);
+}
+
+class UpdateCreatePlateEvent extends VehicleEvent {
+  final String plate;
+  UpdateCreatePlateEvent(this.plate);
+}
+
+class UpdateCreateYearEvent extends VehicleEvent {
+  final String year;
+  UpdateCreateYearEvent(this.year);
 }

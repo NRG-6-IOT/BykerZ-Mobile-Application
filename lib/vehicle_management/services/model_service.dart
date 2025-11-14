@@ -5,7 +5,7 @@ import 'package:byker_z_mobile/vehicle_management/model/vehicle_model.dart';
 
 class ModelService {
   Future<List<Model>> getAllModels() async {
-      final response = await ApiClient.get("/models");
+      final response = await ApiClient.get("models");
 
       if(response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
@@ -16,7 +16,7 @@ class ModelService {
   }
 
   Future<List<String>> getAllBrands() async {
-    final response = await ApiClient.get("/models/brands");
+    final response = await ApiClient.get("models/brands");
 
     if(response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
