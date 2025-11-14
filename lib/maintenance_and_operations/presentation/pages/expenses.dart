@@ -33,7 +33,6 @@ class _ExpensesViewState extends State<ExpensesView> {
   @override
   void initState() {
     super.initState();
-    // Fetch all expenses when the page loads
     context.read<ExpenseBloc>().add(FetchAllExpensesEvent());
   }
 
@@ -42,20 +41,37 @@ class _ExpensesViewState extends State<ExpensesView> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Delete Expense'),
-          content: const Text('Are you sure you want to delete this expense?'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Row(
+            children: [
+              Icon(Icons.warning_rounded, color: Color(0xFFFF6B35)),
+              SizedBox(width: 12),
+              Text('Delete Expense'),
+            ],
+          ),
+          content: const Text(
+            'Are you sure you want to delete this expense? This action cannot be undone.',
+            style: TextStyle(height: 1.5),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w600),
+              ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<ExpenseBloc>().add(DeleteExpenseEvent(expenseId));
               },
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text('Delete'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text('Delete', style: TextStyle(fontWeight: FontWeight.w600)),
             ),
           ],
         );
@@ -74,26 +90,55 @@ class _ExpensesViewState extends State<ExpensesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('Expenses'),
+        title: const Text(
+          'Expenses',
+          style: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.5),
+        ),
+        backgroundColor: const Color(0xFFFF6B35),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: () => context.read<ExpenseBloc>().add(FetchAllExpensesEvent()),
+            tooltip: 'Refresh',
+          ),
+        ],
       ),
       drawer: const AppDrawer(),
       body: BlocListener<ExpenseBloc, ExpenseState>(
         listener: (context, state) {
           if (state is ExpenseDeleted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Expense deleted successfully'),
-                backgroundColor: Colors.green,
+              SnackBar(
+                content: const Row(
+                  children: [
+                    Icon(Icons.check_circle_outline_rounded, color: Colors.white),
+                    SizedBox(width: 12),
+                    Text('Expense deleted successfully'),
+                  ],
+                ),
+                backgroundColor: Colors.green.shade600,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             );
-            // Reload expenses after deletion
             context.read<ExpenseBloc>().add(FetchAllExpensesEvent());
           } else if (state is ExpenseError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
+                content: Row(
+                  children: [
+                    const Icon(Icons.error_outline_rounded, color: Colors.white),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(state.message)),
+                  ],
+                ),
+                backgroundColor: Colors.red.shade600,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             );
           }
@@ -110,162 +155,326 @@ class _ExpensesViewState extends State<ExpensesView> {
 
             if (state is ExpensesLoaded) {
               if (state.expenses.isEmpty) {
-                return const Center(
+                return Center(
                   child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      'No expenses found. Click the + button to create one.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(32),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF6B35).withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.receipt_long_rounded,
+                            size: 80,
+                            color: Color(0xFFFF6B35),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'No expenses yet',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade800,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Click the + button below to create your first expense',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
               }
 
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Expenses',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: state.expenses.length,
-                        itemBuilder: (context, index) {
-                          final expense = state.expenses[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Container(
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<ExpenseBloc>().add(FetchAllExpensesEvent());
+                },
+                color: const Color(0xFFFF6B35),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(20.0),
+                  itemCount: state.expenses.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF6B35).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.receipt_long_rounded,
+                                color: Color(0xFFFF6B35),
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'All Expenses',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFF6B35),
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(12),
                               ),
+                              child: Text(
+                                '${state.expenses.length}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    final expense = state.expenses[index - 1];
+                    return _AnimatedExpenseCard(
+                      index: index - 1,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.06),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _navigateToDetails(expense.id),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: Row(
                                 children: [
-                                  // Expense details
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12),
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Color(0xFFFF6B35), Color(0xFFFF8A5B)],
                                       ),
-                                      padding: const EdgeInsets.all(8),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Center(
-                                              child: Text(
-                                                expense.name,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(
+                                      Icons.receipt_rounded,
+                                      color: Colors.white,
+                                      size: 28,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          expense.name,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFFF6B35).withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(6),
                                               ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 1,
-                                            height: 40,
-                                            color: Colors.black,
-                                          ),
-                                          Expanded(
-                                            child: Center(
                                               child: Text(
                                                 expense.expenseType,
                                                 style: const TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xFFFF6B35),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            width: 1,
-                                            height: 40,
-                                            color: Colors.black,
-                                          ),
-                                          Expanded(
-                                            child: Center(
-                                              child: Text(
-                                                '\$${expense.finalPrice.toStringAsFixed(2)}',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            const SizedBox(width: 8),
+                                            Icon(Icons.list_alt_rounded, size: 14, color: Colors.grey.shade600),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              '${expense.items.length} items',
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey.shade600,
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '\$${expense.finalPrice.toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFFF6B35),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+                                            onPressed: () => _deleteExpense(expense.id),
+                                            iconSize: 22,
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            color: Colors.grey.shade400,
+                                            size: 18,
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  // Delete button
-                                  ElevatedButton(
-                                    onPressed: () => _deleteExpense(expense.id),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF380800),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 24,
-                                        vertical: 8,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                    child: const Text('Delete'),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  // Arrow button
-                                  InkWell(
-                                    onTap: () => _navigateToDetails(expense.id),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      child: const Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               );
             }
 
-            // Initial or error state
-            return const Center(
-              child: Text('Tap to load expenses'),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.swipe_down_rounded, size: 64, color: Colors.grey.shade400),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Pull to refresh',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  ),
+                ],
+              ),
             );
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => const CreateExpense()),
           );
         },
         backgroundColor: const Color(0xFFFF6B35),
-        child: const Icon(Icons.add, color: Colors.white),
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('New Expense', style: TextStyle(fontWeight: FontWeight.w600)),
+        elevation: 4,
+      ),
+    );
+  }
+}
+
+class _AnimatedExpenseCard extends StatefulWidget {
+  final int index;
+  final Widget child;
+
+  const _AnimatedExpenseCard({
+    required this.index,
+    required this.child,
+  });
+
+  @override
+  State<_AnimatedExpenseCard> createState() => _AnimatedExpenseCardState();
+}
+
+class _AnimatedExpenseCardState extends State<_AnimatedExpenseCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 400 + (widget.index * 80)),
+      vsync: this,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeIn,
+    ));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: widget.child,
       ),
     );
   }
