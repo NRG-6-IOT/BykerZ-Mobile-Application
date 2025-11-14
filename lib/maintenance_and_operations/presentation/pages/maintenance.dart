@@ -58,11 +58,15 @@ class _MaintenanceViewState extends State<MaintenanceView> {
 
   @override
   Widget build(BuildContext context) {
+    const accent = Color(0xFFFF6B35);
     return Scaffold(
       appBar: AppBar(
+        // modern minimal AppBar: white background, orange accent text/icon, no elevation
         title: const Text('Maintenance'),
-        backgroundColor: const Color(0xFFFF6B35),
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: accent,
+        elevation: 0,
+        centerTitle: false,
       ),
       drawer: const AppDrawer(),
       body: BlocBuilder<MaintenanceBloc, MaintenanceState>(
@@ -101,7 +105,7 @@ class _MaintenanceViewState extends State<MaintenanceView> {
               onRefresh: () async => _loadMaintenances(),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -109,11 +113,12 @@ class _MaintenanceViewState extends State<MaintenanceView> {
                     const Text(
                       'Scheduled Maintenances',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF222222),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     if (state.scheduledMaintenances.isEmpty)
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
@@ -123,21 +128,26 @@ class _MaintenanceViewState extends State<MaintenanceView> {
                         ),
                       )
                     else
-                      ...state.scheduledMaintenances.map((card) =>
-                        MaintenanceCardWidget(card: card, isCompleted: false)
-                      ),
+                      // send index to each card for staggered animations
+                      ...state.scheduledMaintenances
+                          .toList()
+                          .asMap()
+                          .entries
+                          .map((e) => MaintenanceCardWidget(card: e.value, isCompleted: false, index: e.key))
+                          .toList(),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 28),
 
                     // Completed Maintenances Section
                     const Text(
                       'Maintenances Done',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF222222),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     if (state.completedMaintenances.isEmpty)
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
@@ -147,9 +157,12 @@ class _MaintenanceViewState extends State<MaintenanceView> {
                         ),
                       )
                     else
-                      ...state.completedMaintenances.map((card) =>
-                        MaintenanceCardWidget(card: card, isCompleted: true)
-                      ),
+                      ...state.completedMaintenances
+                          .toList()
+                          .asMap()
+                          .entries
+                          .map((e) => MaintenanceCardWidget(card: e.value, isCompleted: true, index: e.key))
+                          .toList(),
                   ],
                 ),
               ),
@@ -165,26 +178,58 @@ class _MaintenanceViewState extends State<MaintenanceView> {
   }
 }
 
-class MaintenanceCardWidget extends StatelessWidget {
+// Reemplazo de MaintenanceCardWidget por versión stateful con animación
+class MaintenanceCardWidget extends StatefulWidget {
   final MaintenanceCard card;
   final bool isCompleted;
+  final int index; // usado para escalonar animaciones
 
   const MaintenanceCardWidget({
     super.key,
     required this.card,
     required this.isCompleted,
+    this.index = 0,
   });
+
+  @override
+  State<MaintenanceCardWidget> createState() => _MaintenanceCardWidgetState();
+}
+
+class _MaintenanceCardWidgetState extends State<MaintenanceCardWidget> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic);
+    _slide = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+
+    // iniciar la animación con un pequeño delay según el índice para stagger
+    Future.delayed(Duration(milliseconds: 80 * widget.index), () {
+      if (mounted) _ctrl.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   Color _getStatusColor(maintenance_model.MaintenanceState state) {
     switch (state) {
       case maintenance_model.MaintenanceState.pending:
-        return Colors.yellow.shade200;
+        return Colors.yellow.shade100;
       case maintenance_model.MaintenanceState.inProgress:
-        return Colors.blue.shade200;
+        return Colors.blue.shade50;
       case maintenance_model.MaintenanceState.completed:
-        return Colors.green.shade200;
+        return Colors.green.shade50;
       case maintenance_model.MaintenanceState.cancelled:
-        return Colors.red.shade200;
+        return Colors.red.shade50;
     }
   }
 
@@ -205,155 +250,202 @@ class MaintenanceCardWidget extends StatelessWidget {
     return state.toJson();
   }
 
+  // NEW: obtener el nombre del mecanico de forma segura (intenta varios campos)
+  String _mechanicDisplay() {
+    final mech = widget.card.mechanic;
+    if (mech == null) return 'Loading...';
+    try {
+      final name = (mech as dynamic).name;
+      if (name != null && name.toString().trim().isNotEmpty) return name.toString();
+    } catch (_) {}
+    try {
+      final fullName = (mech as dynamic).fullName;
+      if (fullName != null && fullName.toString().trim().isNotEmpty) return fullName.toString();
+    } catch (_) {}
+    try {
+      final username = (mech as dynamic).username;
+      if (username != null && username.toString().trim().isNotEmpty) return username.toString();
+    } catch (_) {}
+    return 'Unknown';
+  }
+
+  // NEW: representación legible del vehículo (intenta varios campos y falla de forma segura)
+  String _vehicleDisplay() {
+    final v = (widget.card as dynamic).vehicle;
+    if (v == null) return 'Unknown vehicle';
+    try {
+      final name = (v as dynamic).name;
+      if (name != null && name.toString().trim().isNotEmpty) return name.toString();
+    } catch (_) {}
+    try {
+      final model = (v as dynamic).model;
+      final brand = (v as dynamic).brand;
+      final plate = (v as dynamic).plate ?? (v as dynamic).licensePlate;
+      if (brand != null && model != null) return '${brand.toString()} ${model.toString()}';
+      if (model != null) return model.toString();
+      if (plate != null) return plate.toString();
+    } catch (_) {}
+    try {
+      return v.toString();
+    } catch (_) {}
+    return 'Unknown vehicle';
+  }
+
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MMM dd, yyyy - hh:mm a');
+    const accent = Color(0xFFFF6B35);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFF6B35),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.all(2),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Date & Time:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(dateFormat.format(DateTime.parse(card.maintenance.dateOfService))),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Location:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(card.maintenance.location),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Mechanic:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(card.mechanic?.username ?? 'Loading...'),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Vehicle:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        card.vehicle != null
-                            ? '${card.vehicle!.model.brand} ${card.vehicle!.model.name} - ${card.vehicle!.plate}'
-                            : 'Loading...',
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Details:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(card.maintenance.details),
-            const SizedBox(height: 16),
-            const Text(
-              'Status:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: _getStatusColor(card.maintenance.state),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                _formatState(card.maintenance.state),
-                style: TextStyle(
-                  color: _getStatusTextColor(card.maintenance.state),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            if (isCompleted && card.maintenance.expense != null) ...[
-              const SizedBox(height: 16),
-              const Text(
-                'Expense:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${card.maintenance.expense!.name} - \$${card.maintenance.expense!.finalPrice.toStringAsFixed(2)}',
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    MaintenanceNavigationHelper.navigateToExpenseDetail(
-                      context,
-                      expenseId: card.maintenance.expense!.id,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF6B35),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'See Expense Details',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(
+        position: _slide,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
               ),
             ],
-          ],
+          ),
+          child: Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () {
+                // optional: expand or navigate - keep minimal for now
+              },
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // header row with small accent bar
+                    Row(
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: accent,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                DateFormat('EEE, MMM d').format(DateTime.parse(widget.card.maintenance.dateOfService)),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF222222),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                DateFormat('hh:mm a').format(DateTime.parse(widget.card.maintenance.dateOfService)),
+                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // status chip
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(widget.card.maintenance.state),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            _formatState(widget.card.maintenance.state),
+                            style: TextStyle(
+                              color: _getStatusTextColor(widget.card.maintenance.state),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    // details compact -> ahora incluye Vehicle y muestra el nombre del mecanico
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Location', style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 4),
+                              Text(widget.card.maintenance.location, style: const TextStyle(fontSize: 13)),
+                              const SizedBox(height: 8),
+                              const Text('Vehicle', style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 4),
+                              Text(_vehicleDisplay(), style: const TextStyle(fontSize: 13)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Mechanic', style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 4),
+                              Text(_mechanicDisplay(), style: const TextStyle(fontSize: 13)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Divider(height: 18, thickness: 0.5),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.card.maintenance.details,
+                      style: const TextStyle(fontSize: 13, color: Color(0xFF444444)),
+                    ),
+                    if (widget.isCompleted && widget.card.maintenance.expense != null) ...[
+                      const SizedBox(height: 12),
+                      const Divider(height: 18, thickness: 0.5),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${widget.card.maintenance.expense!.name} - \$${widget.card.maintenance.expense!.finalPrice.toStringAsFixed(2)}',
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              MaintenanceNavigationHelper.navigateToExpenseDetail(
+                                context,
+                                expenseId: widget.card.maintenance.expense!.id,
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: accent,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            ),
+                            child: const Text('See Details'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
