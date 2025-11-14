@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/shared/presentation/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
 class Monitoring extends StatelessWidget {
@@ -6,6 +7,10 @@ class Monitoring extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Vehicles'),
+      ),
+      drawer: AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
         child: Column(
