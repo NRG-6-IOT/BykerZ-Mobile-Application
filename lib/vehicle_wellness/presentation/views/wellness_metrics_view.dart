@@ -1,6 +1,7 @@
 // presentation/views/wellness_metrics_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../shared/presentation/widgets/app_drawer.dart';
 import '../statemanagement/bloc/wellness_metric_bloc.dart';
 import '../widgets/wellness_metric_list.dart';
 
@@ -21,21 +22,11 @@ class WellnessMetricsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Métricas Wellness - Vehículo $vehicleId'),
-        backgroundColor: Colors.blue,
+        title: Text('Metrics for Vehicle $vehicleId'),
+        backgroundColor: const Color(0xFFFF6B35),
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<WellnessMetricBloc>().add(
-                LoadWellnessMetricsByVehicleIdEvent(vehicleId),
-              );
-            },
-            tooltip: 'Recargar métricas',
-          ),
-        ],
       ),
+      drawer: AppDrawer(),
       body: BlocBuilder<WellnessMetricBloc, WellnessMetricState>(
         builder: (context, state) {
           if (state is WellnessMetricsLoading) {
@@ -55,7 +46,7 @@ class WellnessMetricsScreen extends StatelessWidget {
                         LoadWellnessMetricsByVehicleIdEvent(vehicleId),
                       );
                     },
-                    child: const Text('Reintentar'),
+                    child: const Text('Try again'),
                   ),
                 ],
               ),
@@ -64,7 +55,7 @@ class WellnessMetricsScreen extends StatelessWidget {
 
           if (state is WellnessMetricsEmpty) {
             return const Center(
-              child: Text('No hay métricas para este vehículo'),
+              child: Text('There are no vehicle_wellness for this vehicle'),
             );
           }
 
@@ -77,7 +68,7 @@ class WellnessMetricsScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Cargando métricas...'),
+                const Text('Loading vehicle_wellness...'),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
@@ -85,7 +76,7 @@ class WellnessMetricsScreen extends StatelessWidget {
                       LoadWellnessMetricsByVehicleIdEvent(vehicleId),
                     );
                   },
-                  child: const Text('Cargar Métricas'),
+                  child: const Text('Load vehicle_wellness'),
                 ),
               ],
             ),

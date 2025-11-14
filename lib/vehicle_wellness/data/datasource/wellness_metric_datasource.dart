@@ -1,13 +1,13 @@
 // data/data_sources/wellness_metric_data_source.dart
 import 'dart:convert';
-import 'package:byker_z_mobile/metrics/data/datasource/token_datasource.dart';
+import 'package:byker_z_mobile/vehicle_wellness/data/datasource/token_datasource.dart';
 import 'package:http/http.dart' as http;
 import '../models/wellness_metric_model.dart';
 
 class WellnessMetricDataSource {
   final String baseUrl= 'http://10.0.2.2:8080/api/v1/' ;
   //final String baseUrl= 'https://backend-web-services-1.onrender.com/api/v1/' ;
-  final String basePath = 'metrics';
+  final String basePath = 'vehicle_wellness';
 
   // ✅ MÉTODO PARA OBTENER TOKEN (similar a tu TokenService)
   Future<String?> _getToken() async {
@@ -28,7 +28,7 @@ class WellnessMetricDataSource {
     };
   }
 
-  // ✅ CREATE - POST /api/v1/metrics
+  // ✅ CREATE - POST /api/v1/vehicle_wellness
   Future<WellnessMetricModel> createWellnessMetric(WellnessMetricModel metric) async {
     final response = await http.post(
       Uri.parse('$baseUrl$basePath'),
@@ -43,7 +43,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ UPDATE - PUT /api/v1/metrics/{id}
+  // ✅ UPDATE - PUT /api/v1/vehicle_wellness/{id}
   Future<WellnessMetricModel> updateWellnessMetric(int id, WellnessMetricModel metric) async {
     final response = await http.put(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -58,7 +58,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ DELETE - DELETE /api/v1/metrics/{id}
+  // ✅ DELETE - DELETE /api/v1/vehicle_wellness/{id}
   Future<void> deleteWellnessMetric(int id) async {
     final response = await http.delete(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -70,7 +70,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET BY ID - GET /api/v1/metrics/{id}
+  // ✅ GET BY ID - GET /api/v1/vehicle_wellness/{id}
   Future<WellnessMetricModel> getWellnessMetricById(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -84,7 +84,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET ALL - GET /api/v1/metrics
+  // ✅ GET ALL - GET /api/v1/vehicle_wellness
   Future<List<WellnessMetricModel>> getAllWellnessMetrics() async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath'),
@@ -95,11 +95,11 @@ class WellnessMetricDataSource {
       final List<dynamic> jsonList = json.decode(response.body);
       return jsonList.map((json) => WellnessMetricModel.fromJson(json)).toList();
     } else {
-      throw Exception('Error fetching all wellness metrics: ${response.statusCode} - ${response.body}');
+      throw Exception('Error fetching all wellness vehicle_wellness: ${response.statusCode} - ${response.body}');
     }
   }
 
-  // ✅ GET BY VEHICLE ID - GET /api/v1/metrics/vehicle/{vehicleId}
+  // ✅ GET BY VEHICLE ID - GET /api/v1/vehicle_wellness/vehicle/{vehicleId}
   Future<List<WellnessMetricModel>> getWellnessMetricsByVehicleId(int vehicleId) async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath/vehicle/$vehicleId'),
@@ -113,7 +113,7 @@ class WellnessMetricDataSource {
       // ✅ Manejar 404 como lista vacía (como en tu UserService)
       return [];
     } else {
-      throw Exception('Error fetching vehicle metrics: ${response.statusCode} - ${response.body}');
+      throw Exception('Error fetching vehicle vehicle_wellness: ${response.statusCode} - ${response.body}');
     }
   }
 }

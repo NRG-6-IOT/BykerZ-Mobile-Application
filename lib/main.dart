@@ -2,18 +2,17 @@ import 'package:byker_z_mobile/iam/bloc/authentication/authentication_bloc.dart'
 import 'package:byker_z_mobile/iam/presentation/views/sign-in.page.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
-import 'package:byker_z_mobile/metrics/data/datasource/wellness_metric_datasource.dart';
+import 'package:byker_z_mobile/vehicle_wellness/data/datasource/wellness_metric_datasource.dart';
+import 'package:byker_z_mobile/vehicle_wellness/data/repository/wellness_metric_repository_impl.dart';
+import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/CreateWellnessMetricUseCase.dart';
+import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/DeleteWellnessMetricUseCase.dart';
+import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/GetWellnessMetricByIdUseCase.dart';
+import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/GetWellnessMetricsByVehicleIdUseCase.dart';
+import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/UpdateWellnessMetricUseCase.dart';
+import 'package:byker_z_mobile/vehicle_wellness/presentation/statemanagement/bloc/wellness_metric_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'metrics/data/repository/wellness_metric_repository_impl.dart';
-import 'metrics/domain/usecases/CreateWellnessMetricUseCase.dart';
-import 'metrics/domain/usecases/DeleteWellnessMetricUseCase.dart';
-import 'metrics/domain/usecases/GetWellnessMetricByIdUseCase.dart';
-import 'metrics/domain/usecases/GetWellnessMetricsByVehicleIdUseCase.dart';
-import 'metrics/domain/usecases/UpdateWellnessMetricUseCase.dart';
-import 'metrics/presentation/statemanagement/bloc/wellness_metric_bloc.dart';
-import 'metrics/presentation/views/wellness_metrics_view.dart';
 
 void main() {
   runApp(const MyApp());
