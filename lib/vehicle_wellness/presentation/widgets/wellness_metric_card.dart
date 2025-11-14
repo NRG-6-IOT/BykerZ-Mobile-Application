@@ -22,7 +22,7 @@ class WellnessMetricCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Métrica #${metric.id}',
+                  'Metric #${metric.id}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -35,25 +35,25 @@ class WellnessMetricCard extends StatelessWidget {
 
             // Información de ubicación
             DetailRow(
-              label: '📍 Ubicación',
+              label: 'Ubication',
               value: '${metric.latitude.toStringAsFixed(4)}, ${metric.longitude.toStringAsFixed(4)}',
             ),
 
             // Calidad del aire
             DetailRow(
-              label: '🌬️ Calidad del Aire',
-              value: 'CO₂: ${metric.CO2Ppm}ppm | NH₃: ${metric.NH3Ppm}ppm | Benceno: ${metric.BenzenePpm}ppm',
+              label: 'Air Quality',
+              value: 'CO₂: ${metric.CO2Ppm}ppm | NH₃: ${metric.NH3Ppm}ppm | Benzene: ${metric.BenzenePpm}ppm',
             ),
 
             // Condiciones ambientales
             DetailRow(
-              label: '🌡️ Condiciones',
+              label: 'Conditions',
               value: 'Temp: ${metric.temperatureCelsius}°C | Hum: ${metric.humidityPercentage}%',
             ),
 
             // Presión atmosférica
             DetailRow(
-              label: '📊 Presión',
+              label: 'Pressure',
               value: '${metric.pressureHpa} hPa',
             ),
           ],
@@ -84,7 +84,7 @@ class WellnessMetricCard extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            impactDetected ? 'Impacto' : 'Normal',
+            impactDetected ? 'Impact' : 'Normal',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,

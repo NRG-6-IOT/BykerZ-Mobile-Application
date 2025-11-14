@@ -7,7 +7,7 @@ import '../models/wellness_metric_model.dart';
 class WellnessMetricDataSource {
   final String baseUrl= 'http://10.0.2.2:8080/api/v1/' ;
   //final String baseUrl= 'https://backend-web-services-1.onrender.com/api/v1/' ;
-  final String basePath = 'vehicle_wellness';
+  final String basePath = 'metrics';
 
   // ✅ MÉTODO PARA OBTENER TOKEN (similar a tu TokenService)
   Future<String?> _getToken() async {
@@ -100,20 +100,34 @@ class WellnessMetricDataSource {
   }
 
   // ✅ GET BY VEHICLE ID - GET /api/v1/vehicle_wellness/vehicle/{vehicleId}
+  // data/data_sources/wellness_metric_data_source.dart
   Future<List<WellnessMetricModel>> getWellnessMetricsByVehicleId(int vehicleId) async {
+    print('🔍 [DEBUG] Getting wellness metrics for vehicle: $vehicleId');
+
+    final headers = await _getHeaders();
+    print('🔍 [DEBUG] Headers: $headers');
+
+    final url = '$baseUrl$basePath/vehicle/$vehicleId';
+    print('🔍 [DEBUG] URL: $url');
+
     final response = await http.get(
-      Uri.parse('$baseUrl$basePath/vehicle/$vehicleId'),
-      headers: await _getHeaders(),
+      Uri.parse(url),
+      headers: headers,
     );
+
+    print('🔍 [DEBUG] Response status: ${response.statusCode}');
+    print('🔍 [DEBUG] Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
+      print('🔍 [DEBUG] Parsed ${jsonList.length} metrics');
       return jsonList.map((json) => WellnessMetricModel.fromJson(json)).toList();
     } else if (response.statusCode == 404) {
-      // ✅ Manejar 404 como lista vacía (como en tu UserService)
+      print('🔍 [DEBUG] No metrics found (404)');
       return [];
     } else {
-      throw Exception('Error fetching vehicle vehicle_wellness: ${response.statusCode} - ${response.body}');
+      print('❌ [DEBUG] Error: ${response.statusCode} - ${response.body}');
+      throw Exception('Error fetching vehicle metrics: ${response.statusCode} - ${response.body}');
     }
   }
 }
