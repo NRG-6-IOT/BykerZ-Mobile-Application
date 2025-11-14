@@ -9,6 +9,8 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
+        backgroundColor: const Color(0xFFFF6B35),
+        foregroundColor: Colors.white,
       ),
       drawer: const AppDrawer(),
 

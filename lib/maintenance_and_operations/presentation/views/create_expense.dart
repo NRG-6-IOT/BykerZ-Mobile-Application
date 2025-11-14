@@ -180,7 +180,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Expense'),
-        backgroundColor: const Color(0xFF380800),
+        backgroundColor: const Color(0xFFFF6B35),
         foregroundColor: Colors.white,
       ),
       body: BlocListener<ExpenseBloc, ExpenseState>(

@@ -9,6 +9,8 @@ class Monitoring extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Vehicles'),
+        backgroundColor: const Color(0xFFFF6B35),
+        foregroundColor: Colors.white,
       ),
       drawer: AppDrawer(),
       body: Padding(

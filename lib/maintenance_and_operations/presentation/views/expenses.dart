@@ -76,6 +76,8 @@ class _ExpensesViewState extends State<ExpensesView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expenses'),
+        backgroundColor: const Color(0xFFFF6B35),
+        foregroundColor: Colors.white,
       ),
       drawer: const AppDrawer(),
       body: BlocListener<ExpenseBloc, ExpenseState>(
