@@ -18,7 +18,7 @@ class VehicleDetailsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Vehicle Details"),
-          backgroundColor: const Color(0xFF380800),
+          backgroundColor: const Color(0xFFFF6B35),
         ),
         body: BlocBuilder<VehicleBloc, VehicleState>(
           builder: (context, state) {
