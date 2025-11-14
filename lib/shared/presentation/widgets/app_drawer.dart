@@ -2,8 +2,9 @@ import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/exp
 import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/maintenance.dart';
 import 'package:byker_z_mobile/shared/presentation/views/dashboard.dart';
 import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicles.dart';
-import 'package:byker_z_mobile/vehicle_wellness/presentation/views/monitoring.dart';
 import 'package:flutter/material.dart';
+
+import '../../../vehicle_wellness/presentation/views/wellness_metrics_view.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -47,7 +48,7 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.monitor),
             title: const Text('Monitoring'),
-            onTap: () => navigateTo(context, const Monitoring()),
+            onTap: () => navigateTo(context, const Vehicles()),
           ),
           ListTile(
             leading: const Icon(Icons.monetization_on),
