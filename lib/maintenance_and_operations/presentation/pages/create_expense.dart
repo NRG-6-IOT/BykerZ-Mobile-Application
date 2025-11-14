@@ -299,7 +299,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> {
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: DropdownButtonFormField<String>(
-                        initialValue: _selectedItemType,
+                        value: _selectedItemType, // Changed from initialValue to value
                         decoration: const InputDecoration(
                           labelText: 'Item Type',
                           border: InputBorder.none,

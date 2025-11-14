@@ -1,3 +1,6 @@
+import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicle_create_dialog.dart';
+import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicle_details.dart';
+import 'package:byker_z_mobile/vehicle_management/services/model_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:byker_z_mobile/shared/presentation/widgets/app_drawer.dart';
@@ -6,6 +9,8 @@ import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehi
 import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehicle_state.dart';
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_model.dart';
 import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart';
+import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
+
 
 class Vehicles extends StatelessWidget {
   const Vehicles({super.key});
@@ -13,9 +18,9 @@ class Vehicles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => VehicleBloc(
-        vehicleService: VehicleService(),
-      )..add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0)),
+      create: (context) =>
+      VehicleBloc(vehicleService: VehicleService(), modelService: ModelService())
+        ..add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0)),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Vehicles'),
@@ -55,15 +60,14 @@ class _VehiclesBody extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.refresh, color: Color(0xFF380800)),
                     onPressed: () {
-                      context
-                          .read<VehicleBloc>()
+                      context.read<VehicleBloc>()
                           .add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0));
                     },
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              Expanded(child: _buildVehicleList(state)),
+              Expanded(child: _buildVehicleList(context, state)),
             ],
           ),
         );
@@ -71,7 +75,7 @@ class _VehiclesBody extends StatelessWidget {
     );
   }
 
-  Widget _buildVehicleList(VehicleState state) {
+  Widget _buildVehicleList(BuildContext context, VehicleState state) {
     if (state is VehicleLoading) {
       return const Center(
         child: CircularProgressIndicator(color: Color(0xFF380800)),
@@ -129,11 +133,19 @@ class VehicleCard extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => _navigateToVehicleDetails(context, vehicle.id),
+        onTap: () =>
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.read<VehicleBloc>(),
+                  child: VehicleDetailsPage(vehicleId: vehicle.id),
+                ),
+              ),
+            ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // IMAGE
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
@@ -154,7 +166,6 @@ class VehicleCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // TITLE
                   Text(
                     '${vehicle.model.brand} - ${vehicle.model.name}',
                     style: const TextStyle(
@@ -166,7 +177,6 @@ class VehicleCard extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-                  // PLATE INLINE
                   Text(
                     'Plate: ${vehicle.plate}',
                     style: const TextStyle(
@@ -177,7 +187,6 @@ class VehicleCard extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // DETAILS LIST
                   _buildDetailRow('Model Year', vehicle.model.modelYear),
                   _buildDetailRow('Type', vehicle.model.type),
                   _buildDetailRow('Origin Country', vehicle.model.originCountry),
@@ -187,7 +196,6 @@ class VehicleCard extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // DETAILS BUTTON (RIGHT ALIGNED)
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -239,17 +247,7 @@ class VehicleCard extends StatelessWidget {
       ),
     );
   }
-
-  void _navigateToVehicleDetails(BuildContext context, int vehicleId) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Navigating to vehicle details: $vehicleId'),
-        duration: const Duration(seconds: 1),
-      ),
-    );
-  }
 }
-
 
 class _AddVehicleButton extends StatelessWidget {
   const _AddVehicleButton();
@@ -263,12 +261,19 @@ class _AddVehicleButton extends StatelessWidget {
     );
   }
 
-  void _openCreateDialog(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Open vehicle creation dialog'),
-        duration: Duration(seconds: 1),
+  void _openCreateDialog(BuildContext context) async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) => BlocProvider.value(
+        value: context.read<VehicleBloc>(),
+        child: VehicleCreateDialog(),
       ),
     );
+
+    if (result != null && result is VehicleCreateRequest) {
+      context.read<VehicleBloc>().add(
+        CreateVehicleForOwnerIdEvent(request: result),
+      );
+    }
   }
 }
