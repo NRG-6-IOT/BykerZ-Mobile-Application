@@ -1,5 +1,6 @@
 // data/data_sources/wellness_metric_data_source.dart
 import 'dart:convert';
+import 'package:byker_z_mobile/metrics/data/datasource/token_datasource.dart';
 import 'package:http/http.dart' as http;
 import '../models/wellness_metric_model.dart';
 
@@ -9,12 +10,13 @@ class WellnessMetricDataSource {
   final String basePath = 'metrics';
 
   // ✅ MÉTODO PARA OBTENER TOKEN (similar a tu TokenService)
-  Future<String> _getToken() async {
-    // Aquí implementas cómo obtienes el token
-    // Puedes usar SharedPreferences, SecureStorage, etc.
-    // Ejemplo:
-    // return await TokenService.getToken();
-    return 'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJKb3NlIiwiaWF0IjoxNzYzMDMwMzcxLCJleHAiOjE3NjM2MzUxNzF9.WvUpxBjfqqUyJSW_X2P7q3OrnphqAxhD-D_e02kDL4Ta5tnDcmLHEBUq5wuvFW1-'; // Reemplaza con tu implementación real
+  Future<String?> _getToken() async {
+    try {
+      return await TokenDataSource.getToken();
+    } catch (e) {
+      print('Error obteniendo token: $e');
+      return null;
+    }
   }
 
   // ✅ MÉTODO PARA HEADERS COMUNES
