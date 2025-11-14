@@ -3,7 +3,7 @@ import 'package:byker_z_mobile/iam/bloc/authentication/authentication_event.dart
 import 'package:byker_z_mobile/iam/bloc/authentication/authentication_state.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
-import 'package:byker_z_mobile/shared/presentation/pages/dashboard.dart';
+import 'package:byker_z_mobile/shared/presentation/views/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

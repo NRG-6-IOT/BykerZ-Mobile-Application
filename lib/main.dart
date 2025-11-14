@@ -1,5 +1,5 @@
 import 'package:byker_z_mobile/iam/bloc/authentication/authentication_bloc.dart';
-import 'package:byker_z_mobile/iam/presentation/pages/sign-in.page.dart';
+import 'package:byker_z_mobile/iam/presentation/views/sign-in.page.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
 import 'package:byker_z_mobile/metrics/data/datasource/wellness_metric_datasource.dart';

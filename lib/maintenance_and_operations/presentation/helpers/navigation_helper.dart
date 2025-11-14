@@ -1,5 +1,5 @@
+import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/expense_detail.dart';
 import 'package:flutter/material.dart';
-import 'package:byker_z_mobile/maintenance_and_operations/presentation/pages/expense_detail.dart';
 
 /// Navigation helper class for maintenance and operations features
 class MaintenanceNavigationHelper {

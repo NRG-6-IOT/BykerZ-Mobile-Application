@@ -1,8 +1,8 @@
-import 'package:byker_z_mobile/maintenance_and_operations/presentation/pages/expenses.dart';
-import 'package:byker_z_mobile/maintenance_and_operations/presentation/pages/maintenance.dart';
-import 'package:byker_z_mobile/shared/presentation/pages/dashboard.dart';
-import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicles.dart';
-import 'package:byker_z_mobile/vehicle_wellness/presentation/pages/monitoring.dart';
+import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/expenses.dart';
+import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/maintenance.dart';
+import 'package:byker_z_mobile/shared/presentation/views/dashboard.dart';
+import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicles.dart';
+import 'package:byker_z_mobile/vehicle_wellness/presentation/views/monitoring.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
