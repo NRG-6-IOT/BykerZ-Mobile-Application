@@ -1,6 +1,5 @@
-
-import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicle_create_dialog.dart';
-import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicle_details.dart';
+import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicle_create_dialog.dart';
+import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicle_details.dart';
 import 'package:byker_z_mobile/vehicle_management/services/model_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
