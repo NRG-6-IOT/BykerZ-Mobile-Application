@@ -2,6 +2,8 @@ import 'package:byker_z_mobile/iam/bloc/authentication/authentication_bloc.dart'
 import 'package:byker_z_mobile/iam/presentation/views/sign-in.page.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
+import 'package:byker_z_mobile/notifications/bloc/notifications_bloc.dart';
+import 'package:byker_z_mobile/notifications/services/notifications_websocket_service.dart';
 import 'package:byker_z_mobile/vehicle_wellness/data/datasource/wellness_metric_datasource.dart';
 import 'package:byker_z_mobile/vehicle_wellness/data/repository/wellness_metric_repository_impl.dart';
 import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/CreateWellnessMetricUseCase.dart';
@@ -12,6 +14,8 @@ import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/UpdateWellnessMe
 import 'package:byker_z_mobile/vehicle_wellness/presentation/statemanagement/bloc/wellness_metric_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'notifications/services/notifications_service.dart';
 
 
 void main() {
@@ -37,6 +41,9 @@ class MyApp extends StatelessWidget {
     final getByIdUseCase = GetWellnessMetricByIdUseCase(repository);
     final getByVehicleIdUseCase = GetWellnessMetricsByVehicleIdUseCase(repository);
 
+    final notificationService = NotificationService();
+    final webSocketService = NotificationWebSocketService();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -54,6 +61,9 @@ class MyApp extends StatelessWidget {
             getWellnessMetricsByVehicleId: getByVehicleIdUseCase,
           ),
         ),
+        BlocProvider(
+          create: (_)=> NotificationsBloc(notificationService: notificationService, webSocketService: webSocketService),
+        )
       ],
       child: MaterialApp(
         title: 'BykerZ',

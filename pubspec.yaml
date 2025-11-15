@@ -39,7 +39,10 @@ dependencies:
   bloc: ^9.0.0
   flutter_bloc: ^9.1.1
   intl: ^0.20.2
+  #Token storage
   shared_preferences: ^2.5.3
+  #WebSocket
+  web_socket_channel: ^3.0.0
 
 dev_dependencies:
   flutter_test:

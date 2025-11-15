@@ -13,6 +13,7 @@ class WellnessMetricModel {
   final double humidityPercentage;
   final double pressureHpa;
   final bool impactDetected;
+  final DateTime? registeredAt; // Opcional en el modelo
 
   WellnessMetricModel({
     required this.id,
@@ -26,6 +27,7 @@ class WellnessMetricModel {
     required this.humidityPercentage,
     required this.pressureHpa,
     required this.impactDetected,
+    this.registeredAt,
   });
 
   factory WellnessMetricModel.fromJson(Map<String,dynamic> json){
@@ -41,7 +43,22 @@ class WellnessMetricModel {
       humidityPercentage: json["humidityPercentage"] as double,
       pressureHpa: json["pressureHpa"] as double,
       impactDetected: json["impactDetected"] as bool,
+      registeredAt: _parseDateTime(json["registeredAt"]),
     );
+  }
+
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (e) {
+        print('❌ Error parsing DateTime: $value');
+        return null;
+      }
+    }
+    return null;
   }
 
   WellnessMetric toEntity() {
@@ -57,6 +74,7 @@ class WellnessMetricModel {
       humidityPercentage: humidityPercentage,
       pressureHpa: pressureHpa,
       impactDetected: impactDetected,
+      registeredAt: registeredAt,
     );
   }
 
@@ -78,6 +96,7 @@ class WellnessMetricModel {
       'humidityPercentage': humidityPercentage,
       'pressureHpa': pressureHpa,
       'impactDetected': impactDetected,
+      'registeredAt': registeredAt?.toIso8601String(),
     };
   }
 
@@ -94,6 +113,7 @@ class WellnessMetricModel {
       humidityPercentage: entity.humidityPercentage,
       pressureHpa: entity.pressureHpa,
       impactDetected: entity.impactDetected,
+      registeredAt: entity.registeredAt,
     );
   }
 }

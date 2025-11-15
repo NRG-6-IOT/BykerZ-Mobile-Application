@@ -10,6 +10,7 @@ import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehi
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_model.dart';
 import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart';
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
+import '../../../notifications/presentation/views/notifications_view.dart';
 import '../../../vehicle_wellness/presentation/views/wellness_metrics_view.dart';
 
 
@@ -132,10 +133,11 @@ class VehicleCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () =>
-            Navigator.push(
+      child: Stack(
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
@@ -144,90 +146,89 @@ class VehicleCard extends StatelessWidget {
                 ),
               ),
             ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: Container(
-                color: Colors.grey[200],
-                height: 160,
-                width: double.infinity,
-                child: Image.asset(
-                  'assets/images/vehicle.png',
-                  fit: BoxFit.cover,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
+                  child: Container(
+                    color: Colors.grey[200],
+                    height: 160,
+                    width: double.infinity,
+                    child: Image.asset(
+                      'assets/images/vehicle.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${vehicle.model.brand} - ${vehicle.model.name}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF380800),
-                    ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  Text(
-                    'Plate: ${vehicle.plate}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  _buildDetailRow('Model Year', vehicle.model.modelYear),
-                  _buildDetailRow('Type', vehicle.model.type),
-                  _buildDetailRow('Origin Country', vehicle.model.originCountry),
-                  _buildDetailRow('Produced At', vehicle.model.producedAt),
-                  _buildDetailRow('Displacement', vehicle.model.displacement),
-                  _buildDetailRow('Octane', vehicle.model.octane),
-
-                  const SizedBox(height: 20),
-
-                  // Fila con ambos botones - Metrics a la izquierda, View Details a la derecha
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Botón de Metrics a la izquierda
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          _navigateToWellnessMetrics(context, vehicle.id);
-                        },
-                        label: const Text(
-                          'Metrics',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF6B35),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          elevation: 2,
+                      Text(
+                        '${vehicle.model.brand} - ${vehicle.model.name}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF380800),
                         ),
                       ),
 
-                      // View Details a la derecha
-                      GestureDetector(
-                        onTap: () =>
-                            Navigator.push(
+                      const SizedBox(height: 6),
+
+                      Text(
+                        'Plate: ${vehicle.plate}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      _buildDetailRow('Model Year', vehicle.model.modelYear),
+                      _buildDetailRow('Type', vehicle.model.type),
+                      _buildDetailRow('Origin Country', vehicle.model.originCountry),
+                      _buildDetailRow('Produced At', vehicle.model.producedAt),
+                      _buildDetailRow('Displacement', vehicle.model.displacement),
+                      _buildDetailRow('Octane', vehicle.model.octane),
+
+                      const SizedBox(height: 20),
+
+                      // Fila con ambos botones - Metrics a la izquierda, View Details a la derecha
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Botón de Metrics a la izquierda
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              _navigateToWellnessMetrics(context, vehicle.id);
+                            },
+                            label: const Text(
+                              'Metrics',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF6B35),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              elevation: 2,
+                            ),
+                          ),
+
+                          // View Details a la derecha
+                          GestureDetector(
+                            onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => BlocProvider.value(
@@ -236,22 +237,56 @@ class VehicleCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                        child: Text(
-                          'View Details >',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.orange.shade700,
+                            child: Text(
+                              'View Details >',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.orange.shade700,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
+                ),
+              ],
+            ),
+          ),
+
+          // 🔔 Icono de notificaciones en esquina superior derecha
+          Positioned(
+            top: 12,
+            right: 12,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
                 ],
               ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.notifications_outlined,
+                  color: Color(0xFFFF6B35),
+                  size: 20,
+                ),
+                onPressed: () {
+                  _navigateToNotifications(context, vehicle.id);
+                },
+                tooltip: 'Ver notificaciones',
+                padding: const EdgeInsets.all(6),
+                constraints: const BoxConstraints(),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -261,6 +296,15 @@ class VehicleCard extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (_) => WellnessMetricsScreen(vehicleId: vehicleId),
+      ),
+    );
+  }
+
+  void _navigateToNotifications(BuildContext context, int vehicleId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NotificationsView(specificVehicleId: vehicleId),
       ),
     );
   }
