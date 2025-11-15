@@ -56,6 +56,14 @@ class WellnessMetricCard extends StatelessWidget {
               label: 'Pressure',
               value: '${metric.pressureHpa} hPa',
             ),
+
+            // Fecha de creación
+            DetailRow(
+              label: 'Emited At',
+              value: metric.registeredAt != null
+                  ? '${metric.registeredAt!.toLocal()}'.split(' ')[0]
+                  : 'N/A',
+            ),
           ],
         ),
       ),

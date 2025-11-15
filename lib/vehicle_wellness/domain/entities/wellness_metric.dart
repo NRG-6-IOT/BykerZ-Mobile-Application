@@ -11,6 +11,7 @@ class WellnessMetric {
   final double humidityPercentage;
   final double pressureHpa;
   final bool impactDetected;
+  final DateTime? registeredAt;
 
   WellnessMetric({
     required this.id,
@@ -24,6 +25,7 @@ class WellnessMetric {
     required this.humidityPercentage,
     required this.pressureHpa,
     required this.impactDetected,
+    required this.registeredAt,
   });
 
   //Reglas de negocio pueden ser añadidas aquí
