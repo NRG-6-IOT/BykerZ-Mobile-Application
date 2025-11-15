@@ -57,17 +57,25 @@ class WellnessMetricCard extends StatelessWidget {
               value: '${metric.pressureHpa} hPa',
             ),
 
-            // Fecha de creación
             DetailRow(
-              label: 'Emited At',
-              value: metric.registeredAt != null
-                  ? '${metric.registeredAt!.toLocal()}'.split(' ')[0]
-                  : 'N/A',
+              label: 'Emitted At',
+              value: _formatDateTime(metric.registeredAt),
             ),
+
           ],
         ),
       ),
     );
+  }
+
+  String _formatDateTime(DateTime? date) {  // ✅ Cambiar a DateTime?
+    if (date == null) {
+      return 'N/A';
+    } else if (date == DateTime.fromMillisecondsSinceEpoch(0)) {
+      return 'N/A';
+    } else {
+      return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    }
   }
 
   Widget _buildImpactIndicator(bool impactDetected) {
