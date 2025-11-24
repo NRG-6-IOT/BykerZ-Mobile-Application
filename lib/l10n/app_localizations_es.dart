@@ -7,4 +7,22 @@ import 'app_localizations.dart';
 /// The translations for Spanish Castilian (`es`).
 class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
+
+  @override
+  String get dashboard => 'Panel de Control';
+
+  @override
+  String get maintenance => 'Mantenimiento';
+
+  @override
+  String get monitoring => 'Monitoreo';
+
+  @override
+  String get expenses => 'Gastos';
+
+  @override
+  String get vehicles => 'Vehiculos';
+
+  @override
+  String get logout => 'Cerrar Sesión';
 }

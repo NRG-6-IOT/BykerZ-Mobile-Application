@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "dashboard": "Dashboard",
+  "maintenance": "Maintenance",
+  "monitoring": "Monitoring",
+  "expenses": "Expenses",
+  "vehicles": "Vehicles",
+  "logout": "Log Out"
+}

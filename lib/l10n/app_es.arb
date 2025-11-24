@@ -1,0 +1,9 @@
+{
+  "@@locale": "es",
+  "dashboard": "Panel de Control",
+  "maintenance": "Mantenimiento",
+  "monitoring": "Monitoreo",
+  "expenses": "Gastos",
+  "vehicles": "Vehiculos",
+  "logout": "Cerrar Sesión"
+}
