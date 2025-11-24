@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.5.3
   #WebSocket
   web_socket_channel: ^3.0.0
+  firebase_core: ^3.8.1
 
 dev_dependencies:
   flutter_test:

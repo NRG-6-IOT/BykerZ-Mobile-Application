@@ -12,13 +12,19 @@ import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/GetWellnessMetri
 import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/GetWellnessMetricsByVehicleIdUseCase.dart';
 import 'package:byker_z_mobile/vehicle_wellness/domain/usecases/UpdateWellnessMetricUseCase.dart';
 import 'package:byker_z_mobile/vehicle_wellness/presentation/statemanagement/bloc/wellness_metric_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'firebase_options.dart';
 import 'notifications/services/notifications_service.dart';
 
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

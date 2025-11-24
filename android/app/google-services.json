@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "633759654442",
+    "project_id": "bykerz",
+    "storage_bucket": "bykerz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633759654442:android:6d4b82da34951b08c89953",
+        "android_client_info": {
+          "package_name": "inc.nrg6.byker_z_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgPFt7ajH8gSJnlqYI94UKHyqvTTfitRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
