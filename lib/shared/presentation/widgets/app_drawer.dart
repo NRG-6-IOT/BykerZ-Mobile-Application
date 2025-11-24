@@ -1,3 +1,5 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
+import 'package:byker_z_mobile/l10n/components/language_switcher_button.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/expenses.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/maintenance.dart';
 import 'package:byker_z_mobile/shared/presentation/views/dashboard.dart';
@@ -19,6 +21,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -37,40 +40,44 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.dashboard),
-            title: const Text('Dashboard'),
+            title: Text(localizations.dashboard),
             onTap: () => navigateTo(context, const Dashboard()),
           ),
           ListTile(
             leading: const Icon(Icons.build),
-            title: const Text('Maintenance'),
+            title: Text(localizations.maintenance),
             onTap: () => navigateTo(context, const Maintenance()),
           ),
           ListTile(
             leading: const Icon(Icons.monitor),
-            title: const Text('Monitoring'),
+            title: Text(localizations.monitoring),
             onTap: () => navigateTo(context, const Vehicles()),
           ),
           ListTile(
             leading: const Icon(Icons.monetization_on),
-            title: const Text('Expenses'),
+            title: Text(localizations.expenses),
             onTap: () => navigateTo(context, const Expenses()),
           ),
           ListTile(
             leading: const Icon(Icons.two_wheeler),
-            title: const Text('Vehicles'),
+            title: Text(localizations.vehicles),
             onTap: () => navigateTo(context, const Vehicles()),
           ),
           const Divider(
             thickness: 2,
           ),
+          LanguageSwitcherButton(),
+          const Divider(
+            thickness: 2,
+          ),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Log Out', style: TextStyle(color: Colors.red)),
+            title: Text(localizations.logout, style: TextStyle(color: Colors.red)),
             onTap: () {
               Navigator.of(context).pop();
               // TO-DO: Implementar lógica de cierre de sesión
             },
-          ),
+          )
         ],
       ),
     );
