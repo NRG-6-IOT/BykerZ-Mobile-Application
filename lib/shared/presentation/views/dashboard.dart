@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:byker_z_mobile/shared/presentation/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +7,10 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(localizations.dashboard),
         backgroundColor: const Color(0xFFFF6B35),
         foregroundColor: Colors.white,
       ),

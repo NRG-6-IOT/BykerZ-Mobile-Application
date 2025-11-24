@@ -1,4 +1,5 @@
 // presentation/views/wellness_metrics_screen.dart
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../shared/presentation/widgets/app_drawer.dart';
@@ -19,10 +20,10 @@ class WellnessMetricsScreen extends StatelessWidget {
         LoadWellnessMetricsByVehicleIdEvent(vehicleId),
       );
     });
-
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Metrics for Vehicle $vehicleId'),
+        title: Text('${{localizations.metrics}} $vehicleId'),
         backgroundColor: const Color(0xFFFF6B35),
         foregroundColor: Colors.white,
       ),

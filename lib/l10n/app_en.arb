@@ -5,5 +5,10 @@
   "monitoring": "Monitoring",
   "expenses": "Expenses",
   "vehicles": "Vehicles",
-  "logout": "Log Out"
+  "logout": "Log Out",
+  "expenseDetails": "Expense Details",
+  "createExpense": "Create Expense",
+  "vehicleDetails": "Vehicle Details",
+  "createVehicle": "Create Vehicle",
+  "metrics": "Metrics for Vehicle"
 }

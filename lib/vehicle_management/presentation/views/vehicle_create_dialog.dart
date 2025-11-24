@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
@@ -12,12 +13,12 @@ class VehicleCreateDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<VehicleBloc>().add(LoadVehicleCreateFormEvent());
-
+    final localizations = AppLocalizations.of(context)!;
     final currentYear = DateTime.now().year;
     final years = List.generate(50, (i) => (currentYear - i).toString());
 
     return AlertDialog(
-      title: const Text("Create Vehicle"),
+      title: Text(localizations.createVehicle),
       content: BlocBuilder<VehicleBloc, VehicleState>(
         builder: (context, state) {
           if (state is VehicleCreateFormLoading) {

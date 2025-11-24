@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicle_create_dialog.dart';
 import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicle_details.dart';
 import 'package:byker_z_mobile/vehicle_management/services/model_service.dart';
@@ -19,13 +20,14 @@ class Vehicles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (context) =>
       VehicleBloc(vehicleService: VehicleService(), modelService: ModelService())
         ..add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Vehicles'),
+          title: Text(localizations.vehicles),
           backgroundColor: const Color(0xFFFF6B35),
         ),
         drawer: const AppDrawer(),

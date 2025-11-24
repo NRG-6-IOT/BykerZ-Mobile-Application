@@ -25,4 +25,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get logout => 'Cerrar Sesión';
+
+  @override
+  String get expenseDetails => 'Detalles del Gasto';
+
+  @override
+  String get createExpense => 'Crear Gasto';
+
+  @override
+  String get vehicleDetails => 'Detalles del Vehiculo';
+
+  @override
+  String get createVehicle => 'Crear Vehiculo';
+
+  @override
+  String get metrics => 'Métricas para el vehículo';
 }

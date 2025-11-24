@@ -5,5 +5,10 @@
   "monitoring": "Monitoreo",
   "expenses": "Gastos",
   "vehicles": "Vehiculos",
-  "logout": "Cerrar Sesión"
+  "logout": "Cerrar Sesión",
+  "expenseDetails": "Detalles del Gasto",
+  "createExpense": "Crear Gasto",
+  "vehicleDetails": "Detalles del Vehiculo",
+  "createVehicle": "Crear Vehiculo",
+  "metrics": "Métricas para el vehículo"
 }

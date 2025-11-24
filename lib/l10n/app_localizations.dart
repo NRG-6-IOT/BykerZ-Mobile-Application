@@ -133,6 +133,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log Out'**
   String get logout;
+
+  /// No description provided for @expenseDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Details'**
+  String get expenseDetails;
+
+  /// No description provided for @createExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Expense'**
+  String get createExpense;
+
+  /// No description provided for @vehicleDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Details'**
+  String get vehicleDetails;
+
+  /// No description provided for @createVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Vehicle'**
+  String get createVehicle;
+
+  /// No description provided for @metrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Metrics for Vehicle'**
+  String get metrics;
 }
 
 class _AppLocalizationsDelegate

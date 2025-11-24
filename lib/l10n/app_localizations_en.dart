@@ -25,4 +25,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Log Out';
+
+  @override
+  String get expenseDetails => 'Expense Details';
+
+  @override
+  String get createExpense => 'Create Expense';
+
+  @override
+  String get vehicleDetails => 'Vehicle Details';
+
+  @override
+  String get createVehicle => 'Create Vehicle';
+
+  @override
+  String get metrics => 'Metrics for Vehicle';
 }
