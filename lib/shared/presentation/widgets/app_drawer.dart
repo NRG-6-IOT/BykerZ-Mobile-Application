@@ -6,8 +6,6 @@ import 'package:byker_z_mobile/shared/presentation/views/dashboard.dart';
 import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicles.dart';
 import 'package:flutter/material.dart';
 
-import '../../../vehicle_wellness/presentation/views/wellness_metrics_view.dart';
-
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
