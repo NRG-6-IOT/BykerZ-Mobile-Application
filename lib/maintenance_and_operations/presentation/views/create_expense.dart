@@ -36,14 +36,16 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
   final TextEditingController _itemUnitPriceController = TextEditingController();
 
   String _selectedItemType = 'SUPPLIES';
-  final List<String> _itemTypes = [
-    'FINE',
-    'PARKING',
-    'PAYMENT',
-    'SUPPLIES',
-    'TAX',
-    'TOOLS'
-  ];
+  List<String> get _itemTypes {
+    return [
+      'FINE',
+      'PARKING',
+      'PAYMENT',
+      'SUPPLIES',
+      'TAX',
+      'TOOLS'
+    ];
+  }
 
   List<Map<String, dynamic>> _items = [];
   late AnimationController _animationController;
@@ -71,13 +73,37 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
     }
   }
 
+  String _getItemTypeDisplayName(String type) {
+    final localizations = AppLocalizations.of(context);
+    if (localizations == null) return type;
+
+    switch (type) {
+      case 'FINE':
+        return localizations.itemTypeFine;
+      case 'PARKING':
+        return localizations.itemTypeParking;
+      case 'PAYMENT':
+        return localizations.itemTypePayment;
+      case 'SUPPLIES':
+        return localizations.itemTypeSupplies;
+      case 'TAX':
+        return localizations.itemTypeTax;
+      case 'TOOLS':
+        return localizations.itemTypeTools;
+      default:
+        return type;
+    }
+  }
+
   void _addItem() {
+    final localizations = AppLocalizations.of(context)!;
+
     if (_itemNameController.text.trim().isEmpty ||
         _itemAmountController.text.isEmpty ||
         _itemUnitPriceController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all item fields'),
+        SnackBar(
+          content: Text(localizations.fillAllItemFields),
           backgroundColor: Colors.red,
         ),
       );
@@ -89,8 +115,8 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
 
     if (amount <= 0 || unitPrice < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Amount must be greater than 0 and unit price cannot be negative'),
+        SnackBar(
+          content: Text(localizations.invalidAmountOrPrice),
           backgroundColor: Colors.red,
         ),
       );
@@ -124,10 +150,12 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
   }
 
   Future<void> _createExpense() async {
+    final localizations = AppLocalizations.of(context)!;
+
     if (_expenseNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter an expense name'),
+        SnackBar(
+          content: Text(localizations.enterExpenseName),
           backgroundColor: Colors.red,
         ),
       );
@@ -136,8 +164,8 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
 
     if (_items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add at least one item'),
+        SnackBar(
+          content: Text(localizations.addAtLeastOneItem),
           backgroundColor: Colors.red,
         ),
       );
@@ -150,8 +178,8 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
 
       if (ownerId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Owner ID not found. Please sign in again.'),
+          SnackBar(
+            content: Text(localizations.ownerIdNotFound),
             backgroundColor: Colors.red,
           ),
         );
@@ -166,15 +194,15 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
       };
 
       context.read<ExpenseBloc>().add(
-            CreateExpenseForOwnerEvent(
-              ownerId: ownerId,
-              expenseData: expenseData,
-            ),
-          );
+        CreateExpenseForOwnerEvent(
+          ownerId: ownerId,
+          expenseData: expenseData,
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error creating expense: $e'),
+          content: Text('${localizations.errorCreatingExpense}: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -220,8 +248,8 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
         listener: (context, state) {
           if (state is ExpenseCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Expense created successfully!'),
+              SnackBar(
+                content: Text(localizations.expenseCreatedSuccessfully),
                 backgroundColor: Colors.green,
               ),
             );
@@ -285,9 +313,9 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              const Text(
-                                'Expense Name',
-                                style: TextStyle(
+                              Text(
+                                localizations.expenseName,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF380800),
@@ -299,7 +327,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                           TextField(
                             controller: _expenseNameController,
                             decoration: InputDecoration(
-                              hintText: 'Enter expense name',
+                              hintText: localizations.enterExpenseName,
                               filled: true,
                               fillColor: const Color(0xFFF5F5F5),
                               border: OutlineInputBorder(
@@ -359,9 +387,9 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              const Text(
-                                'Add Items',
-                                style: TextStyle(
+                              Text(
+                                localizations.addItems,
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF380800),
@@ -374,7 +402,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                           TextField(
                             controller: _itemNameController,
                             decoration: InputDecoration(
-                              labelText: 'Item Name',
+                              labelText: localizations.itemName,
                               prefixIcon: const Icon(Icons.label_outline),
                               filled: true,
                               fillColor: const Color(0xFFF5F5F5),
@@ -393,7 +421,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                   controller: _itemAmountController,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                    labelText: 'Amount',
+                                    labelText: localizations.amount,
                                     prefixIcon: const Icon(Icons.tag),
                                     filled: true,
                                     fillColor: const Color(0xFFF5F5F5),
@@ -410,7 +438,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                   controller: _itemUnitPriceController,
                                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                   decoration: InputDecoration(
-                                    labelText: 'Unit Price',
+                                    labelText: localizations.unitPrice,
                                     prefixIcon: const Icon(Icons.attach_money),
                                     filled: true,
                                     fillColor: const Color(0xFFF5F5F5),
@@ -428,7 +456,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                           DropdownButtonFormField<String>(
                             value: _selectedItemType,
                             decoration: InputDecoration(
-                              labelText: 'Item Type',
+                              labelText: localizations.itemType,
                               prefixIcon: Icon(_getItemIcon(_selectedItemType)),
                               filled: true,
                               fillColor: const Color(0xFFF5F5F5),
@@ -444,7 +472,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                   children: [
                                     Icon(_getItemIcon(type), size: 20),
                                     const SizedBox(width: 8),
-                                    Text(type),
+                                    Text(_getItemTypeDisplayName(type)),
                                   ],
                                 ),
                               );
@@ -473,7 +501,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                       Icon(Icons.add_circle_outline, color: Colors.white),
                                       SizedBox(width: 8),
                                       Text(
-                                        'Add Item',
+                                        localizations.addItem,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
@@ -534,9 +562,9 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                     ),
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text(
-                                    'Added Items',
-                                    style: TextStyle(
+                                  Text(
+                                    localizations.addedItems,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xFF380800),
@@ -599,7 +627,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                                 ),
                                               ),
                                               Text(
-                                                item['itemType'],
+                                                _getItemTypeDisplayName(item['itemType']),
                                                 style: TextStyle(
                                                   color: Colors.grey.shade600,
                                                   fontSize: 12,
@@ -684,7 +712,7 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                 Icon(Icons.calculate, color: Colors.white, size: 24),
                                 SizedBox(width: 12),
                                 Text(
-                                  'Total Sum',
+                                  localizations.totalSum,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -723,10 +751,10 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                                 border: Border.all(color: const Color(0xFFFF6B35)),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Text(
-                                'Cancel',
+                              child: Text(
+                                localizations.cancel,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFFFF6B35),
@@ -748,30 +776,30 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               child: state is ExpenseLoading
                                   ? SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                        ),
-                                      ),
-                                    )
+                                height: 20,
+                                width: 20,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                ),
+                              )
                                   : Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.save, color: Colors.white),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'Save Expense',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.save, color: Colors.white),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    localizations.saveExpense,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
                                     ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -787,4 +815,3 @@ class _CreateExpenseViewState extends State<CreateExpenseView> with SingleTicker
     );
   }
 }
-

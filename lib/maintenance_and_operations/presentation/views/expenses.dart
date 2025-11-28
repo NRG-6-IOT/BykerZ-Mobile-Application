@@ -38,6 +38,8 @@ class _ExpensesViewState extends State<ExpensesView> {
   }
 
   void _deleteExpense(int expenseId) {
+    final localizations = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -46,17 +48,17 @@ class _ExpensesViewState extends State<ExpensesView> {
             borderRadius: BorderRadius.circular(16),
           ),
           title: Row(
-            children: const [
-              Icon(Icons.delete_forever, color: Colors.red),
-              SizedBox(width: 8),
-              Text('Delete Expense'),
+            children: [
+              const Icon(Icons.delete_forever, color: Colors.red),
+              const SizedBox(width: 8),
+              Text(localizations.deleteExpense),
             ],
           ),
-          content: const Text('Are you sure you want to delete this expense? This action cannot be undone.'),
+          content: Text(localizations.deleteExpenseConfirmation),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: Text(localizations.cancel),
             ),
             ElevatedButton(
               onPressed: () {
@@ -69,7 +71,7 @@ class _ExpensesViewState extends State<ExpensesView> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Delete'),
+              child: Text(localizations.delete),
             ),
           ],
         );
@@ -104,8 +106,8 @@ class _ExpensesViewState extends State<ExpensesView> {
         listener: (context, state) {
           if (state is ExpenseDeleted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Expense deleted successfully'),
+              SnackBar(
+                content: Text(localizations.expenseDeletedSuccessfully),
                 backgroundColor: Colors.green,
               ),
             );
@@ -145,9 +147,9 @@ class _ExpensesViewState extends State<ExpensesView> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Loading expenses...',
-                      style: TextStyle(
+                    Text(
+                      localizations.loadingExpenses,
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
                       ),
@@ -187,7 +189,7 @@ class _ExpensesViewState extends State<ExpensesView> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'No expenses found',
+                                localizations.noExpensesFound,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -196,7 +198,7 @@ class _ExpensesViewState extends State<ExpensesView> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Click the + button to create your first expense.',
+                                localizations.clickToCreateFirstExpense,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14,
@@ -244,16 +246,16 @@ class _ExpensesViewState extends State<ExpensesView> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'All Expenses',
-                                style: TextStyle(
+                              Text(
+                                localizations.allExpenses,
+                                style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF380800),
                                 ),
                               ),
                               Text(
-                                '${state.expenses.length} total expenses',
+                                '${state.expenses.length} ${localizations.totalExpenses}',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey.shade600,
@@ -411,8 +413,8 @@ class _ExpensesViewState extends State<ExpensesView> {
               );
             }
 
-            return const Center(
-              child: Text('Tap to load expenses'),
+            return Center(
+              child: Text(localizations.tapToLoadExpenses),
             );
           },
         ),
@@ -434,9 +436,9 @@ class _ExpensesViewState extends State<ExpensesView> {
           },
           backgroundColor: const Color(0xFFFF6B35),
           icon: const Icon(Icons.add, color: Colors.white),
-          label: const Text(
-            'New Expense',
-            style: TextStyle(
+          label: Text(
+            localizations.newExpense,
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
