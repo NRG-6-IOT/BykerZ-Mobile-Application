@@ -1,5 +1,6 @@
 // presentation/widgets/wellness_metric_card.dart
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../domain/entities/wellness_metric.dart';
 import 'detail_row.dart';
 
@@ -10,6 +11,8 @@ class WellnessMetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
@@ -22,63 +25,62 @@ class WellnessMetricCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Metric #${metric.id}',
+                  '${l10n.metric} #${metric.id}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                _buildImpactIndicator(metric.impactDetected),
+                _buildImpactIndicator(metric.impactDetected, l10n),
               ],
             ),
             const SizedBox(height: 12),
 
             // Información de ubicación
             DetailRow(
-              label: 'Ubication',
+              label: l10n.location,
               value: '${metric.latitude.toStringAsFixed(4)}, ${metric.longitude.toStringAsFixed(4)}',
             ),
 
             // Calidad del aire
             DetailRow(
-              label: 'Air Quality',
-              value: 'CO₂: ${metric.CO2Ppm}ppm | NH₃: ${metric.NH3Ppm}ppm | Benzene: ${metric.BenzenePpm}ppm',
+              label: l10n.airQuality,
+              value: '${l10n.co2}: ${metric.CO2Ppm}${l10n.ppm} | ${l10n.nh3}: ${metric.NH3Ppm}${l10n.ppm} | ${l10n.benzene}: ${metric.BenzenePpm}${l10n.ppm}',
             ),
 
             // Condiciones ambientales
             DetailRow(
-              label: 'Conditions',
-              value: 'Temp: ${metric.temperatureCelsius}°C | Hum: ${metric.humidityPercentage}%',
+              label: l10n.conditions,
+              value: '${l10n.temperature}: ${metric.temperatureCelsius}°C | ${l10n.humidity}: ${metric.humidityPercentage}%',
             ),
 
             // Presión atmosférica
             DetailRow(
-              label: 'Pressure',
-              value: '${metric.pressureHpa} hPa',
+              label: l10n.pressure,
+              value: '${metric.pressureHpa} ${l10n.hPa}',
             ),
 
             DetailRow(
-              label: 'Emitted At',
-              value: _formatDateTime(metric.registeredAt),
+              label: l10n.emittedAt,
+              value: _formatDateTime(metric.registeredAt, l10n),
             ),
-
           ],
         ),
       ),
     );
   }
 
-  String _formatDateTime(DateTime? date) {  // ✅ Cambiar a DateTime?
+  String _formatDateTime(DateTime? date, AppLocalizations l10n) {
     if (date == null) {
-      return 'N/A';
+      return l10n.notAvailable;
     } else if (date == DateTime.fromMillisecondsSinceEpoch(0)) {
-      return 'N/A';
+      return l10n.notAvailable;
     } else {
       return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
     }
   }
 
-  Widget _buildImpactIndicator(bool impactDetected) {
+  Widget _buildImpactIndicator(bool impactDetected, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -100,7 +102,7 @@ class WellnessMetricCard extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           Text(
-            impactDetected ? 'Impact' : 'Normal',
+            impactDetected ? l10n.impact : l10n.normal,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,

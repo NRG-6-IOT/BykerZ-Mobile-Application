@@ -1,6 +1,8 @@
 // widgets/websocket_status_indicator.dart
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
+
 class WebSocketStatusIndicator extends StatelessWidget {
   final bool isConnected;
   final int? vehicleId;
@@ -13,6 +15,8 @@ class WebSocketStatusIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -28,8 +32,8 @@ class WebSocketStatusIndicator extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             isConnected
-                ? 'Connected - Receiving alerts in real time ${vehicleId != null ? 'for the vehicle $vehicleId' : ''}'
-                : 'Disconnected - Real-time alerts are unavailable',
+                ? '${l10n.connectedReceivingAlerts} ${vehicleId != null ? '${l10n.forVehicle} $vehicleId' : ''}'
+                : l10n.disconnectedAlertsUnavailable,
             style: TextStyle(
               color: isConnected ? Colors.green : Colors.grey,
               fontWeight: FontWeight.w500,

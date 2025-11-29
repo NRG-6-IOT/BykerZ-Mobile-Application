@@ -39,7 +39,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createVehicle => 'Crear Vehiculo';
 
   @override
-  String get metrics => 'Métricas para el vehículo';
+  String get metrics => 'Métricas';
 
   @override
   String get ownerIdNotFound =>
@@ -225,4 +225,130 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get itemTypeTools => 'Herramientas';
+
+  @override
+  String get noNotificationsAvailable => 'No hay notificaciones disponibles.';
+
+  @override
+  String get reloadNotifications => 'Recargar notificaciones';
+
+  @override
+  String get markAsRead => 'Marcar como leído';
+
+  @override
+  String get close => 'Cerrar';
+
+  @override
+  String get seeMore => 'Ver más';
+
+  @override
+  String get newAlert => 'Nueva Alerta';
+
+  @override
+  String get type => 'Tipo';
+
+  @override
+  String get severity => 'Severidad';
+
+  @override
+  String get date => 'Fecha';
+
+  @override
+  String get allNotifications => 'Todas las notificaciones';
+
+  @override
+  String get alertsForVehicle => 'Alertas - Vehículo';
+
+  @override
+  String get now => 'Ahora';
+
+  @override
+  String get minutesAgo => 'min atrás';
+
+  @override
+  String get hoursAgo => 'h atrás';
+
+  @override
+  String get connectedReceivingAlerts =>
+      'Conectado - Recibiendo alertas en tiempo real';
+
+  @override
+  String get forVehicle => 'para vehículo';
+
+  @override
+  String get disconnectedAlertsUnavailable =>
+      'Desconectado - Las alertas en tiempo real no están disponibles';
+
+  @override
+  String get severityHigh => 'ALTA';
+
+  @override
+  String get severityMedium => 'MEDIA';
+
+  @override
+  String get severityLow => 'BAJA';
+
+  @override
+  String get title => 'Título';
+
+  @override
+  String get message => 'Mensaje';
+
+  @override
+  String get tryAgain => 'Intentar nuevamente';
+
+  @override
+  String get noWellnessMetrics =>
+      'No hay métricas de bienestar para este vehículo';
+
+  @override
+  String get loadingWellnessMetrics => 'Cargando métricas de bienestar...';
+
+  @override
+  String get loadWellnessMetrics => 'Cargar métricas de bienestar';
+
+  @override
+  String get metric => 'Métrica';
+
+  @override
+  String get airQuality => 'Calidad del Aire';
+
+  @override
+  String get conditions => 'Condiciones';
+
+  @override
+  String get pressure => 'Presión';
+
+  @override
+  String get emittedAt => 'Emitido En';
+
+  @override
+  String get impact => 'Impacto';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get temperature => 'Temperatura';
+
+  @override
+  String get humidity => 'Humedad';
+
+  @override
+  String get co2 => 'CO₂';
+
+  @override
+  String get nh3 => 'NH₃';
+
+  @override
+  String get benzene => 'Benceno';
+
+  @override
+  String get ppm => 'ppm';
+
+  @override
+  String get hPa => 'hPa';
+
+  @override
+  String get notAvailable => 'N/D';
 }

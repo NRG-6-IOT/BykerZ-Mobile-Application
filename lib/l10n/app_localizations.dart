@@ -161,7 +161,7 @@ abstract class AppLocalizations {
   /// No description provided for @metrics.
   ///
   /// In en, this message translates to:
-  /// **'Metrics for Vehicle'**
+  /// **'Metrics'**
   String get metrics;
 
   /// No description provided for @ownerIdNotFound.
@@ -523,6 +523,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tools'**
   String get itemTypeTools;
+
+  /// No description provided for @noNotificationsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no notifications available.'**
+  String get noNotificationsAvailable;
+
+  /// No description provided for @reloadNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Reload notifications'**
+  String get reloadNotifications;
+
+  /// No description provided for @markAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as read'**
+  String get markAsRead;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// No description provided for @newAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'New Alert'**
+  String get newAlert;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @severity.
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get severity;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @allNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications'**
+  String get allNotifications;
+
+  /// No description provided for @alertsForVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts - Vehicle'**
+  String get alertsForVehicle;
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get now;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'min ago'**
+  String get minutesAgo;
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'h ago'**
+  String get hoursAgo;
+
+  /// No description provided for @connectedReceivingAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected - Receiving alerts in real time'**
+  String get connectedReceivingAlerts;
+
+  /// No description provided for @forVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'for the vehicle'**
+  String get forVehicle;
+
+  /// No description provided for @disconnectedAlertsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected - Real-time alerts are unavailable'**
+  String get disconnectedAlertsUnavailable;
+
+  /// No description provided for @severityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'HIGH'**
+  String get severityHigh;
+
+  /// No description provided for @severityMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDIUM'**
+  String get severityMedium;
+
+  /// No description provided for @severityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'LOW'**
+  String get severityLow;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @message.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get message;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @noWellnessMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no wellness metrics for this vehicle'**
+  String get noWellnessMetrics;
+
+  /// No description provided for @loadingWellnessMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading wellness metrics...'**
+  String get loadingWellnessMetrics;
+
+  /// No description provided for @loadWellnessMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Load wellness metrics'**
+  String get loadWellnessMetrics;
+
+  /// No description provided for @metric.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric'**
+  String get metric;
+
+  /// No description provided for @airQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Air Quality'**
+  String get airQuality;
+
+  /// No description provided for @conditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions'**
+  String get conditions;
+
+  /// No description provided for @pressure.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure'**
+  String get pressure;
+
+  /// No description provided for @emittedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Emitted At'**
+  String get emittedAt;
+
+  /// No description provided for @impact.
+  ///
+  /// In en, this message translates to:
+  /// **'Impact'**
+  String get impact;
+
+  /// No description provided for @normal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get normal;
+
+  /// No description provided for @temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get temperature;
+
+  /// No description provided for @humidity.
+  ///
+  /// In en, this message translates to:
+  /// **'Humidity'**
+  String get humidity;
+
+  /// No description provided for @co2.
+  ///
+  /// In en, this message translates to:
+  /// **'CO₂'**
+  String get co2;
+
+  /// No description provided for @nh3.
+  ///
+  /// In en, this message translates to:
+  /// **'NH₃'**
+  String get nh3;
+
+  /// No description provided for @benzene.
+  ///
+  /// In en, this message translates to:
+  /// **'Benzene'**
+  String get benzene;
+
+  /// No description provided for @ppm.
+  ///
+  /// In en, this message translates to:
+  /// **'ppm'**
+  String get ppm;
+
+  /// No description provided for @hPa.
+  ///
+  /// In en, this message translates to:
+  /// **'hPa'**
+  String get hPa;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notAvailable;
 }
 
 class _AppLocalizationsDelegate

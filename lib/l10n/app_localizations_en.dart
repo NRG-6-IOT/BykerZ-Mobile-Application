@@ -39,7 +39,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createVehicle => 'Create Vehicle';
 
   @override
-  String get metrics => 'Metrics for Vehicle';
+  String get metrics => 'Metrics';
 
   @override
   String get ownerIdNotFound => 'Owner ID not found. Please sign in again.';
@@ -223,4 +223,131 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemTypeTools => 'Tools';
+
+  @override
+  String get noNotificationsAvailable =>
+      'There are no notifications available.';
+
+  @override
+  String get reloadNotifications => 'Reload notifications';
+
+  @override
+  String get markAsRead => 'Mark as read';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get newAlert => 'New Alert';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get severity => 'Severity';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get allNotifications => 'All notifications';
+
+  @override
+  String get alertsForVehicle => 'Alerts - Vehicle';
+
+  @override
+  String get now => 'Now';
+
+  @override
+  String get minutesAgo => 'min ago';
+
+  @override
+  String get hoursAgo => 'h ago';
+
+  @override
+  String get connectedReceivingAlerts =>
+      'Connected - Receiving alerts in real time';
+
+  @override
+  String get forVehicle => 'for the vehicle';
+
+  @override
+  String get disconnectedAlertsUnavailable =>
+      'Disconnected - Real-time alerts are unavailable';
+
+  @override
+  String get severityHigh => 'HIGH';
+
+  @override
+  String get severityMedium => 'MEDIUM';
+
+  @override
+  String get severityLow => 'LOW';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get message => 'Message';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get noWellnessMetrics =>
+      'There are no wellness metrics for this vehicle';
+
+  @override
+  String get loadingWellnessMetrics => 'Loading wellness metrics...';
+
+  @override
+  String get loadWellnessMetrics => 'Load wellness metrics';
+
+  @override
+  String get metric => 'Metric';
+
+  @override
+  String get airQuality => 'Air Quality';
+
+  @override
+  String get conditions => 'Conditions';
+
+  @override
+  String get pressure => 'Pressure';
+
+  @override
+  String get emittedAt => 'Emitted At';
+
+  @override
+  String get impact => 'Impact';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get temperature => 'Temperature';
+
+  @override
+  String get humidity => 'Humidity';
+
+  @override
+  String get co2 => 'CO₂';
+
+  @override
+  String get nh3 => 'NH₃';
+
+  @override
+  String get benzene => 'Benzene';
+
+  @override
+  String get ppm => 'ppm';
+
+  @override
+  String get hPa => 'hPa';
+
+  @override
+  String get notAvailable => 'N/A';
 }
