@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehicle_bloc.dart';
@@ -12,12 +13,13 @@ class VehicleDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return BlocProvider.value(
       value: BlocProvider.of<VehicleBloc>(context)
         ..add(FetchVehicleByIdEvent(vehicleId: vehicleId)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Vehicle Details"),
+          title: Text(localizations.vehicleDetails),
           backgroundColor: const Color(0xFFFF6B35),
         ),
         body: BlocBuilder<VehicleBloc, VehicleState>(

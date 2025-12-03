@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:byker_z_mobile/shared/presentation/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,8 @@ import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart'
 import 'package:byker_z_mobile/iam/services/user_service.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance_card.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/model/maintenance.dart' as maintenance_model;
-import 'package:byker_z_mobile/maintenance_and_operations/presentation/helpers/navigation_helper.dart';
+
+import '../helpers/navigation_helper.dart';
 
 class Maintenance extends StatelessWidget {
   const Maintenance({super.key});
@@ -63,19 +65,21 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
       context.read<MaintenanceBloc>().add(FetchMaintenancesByOwnerIdEvent(ownerId));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Owner ID not found. Please sign in again.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.ownerIdNotFound)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         elevation: 0,
-        title: const Text(
-          'Maintenance',
+        title: Text(
+          localizations.maintenance,
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         backgroundColor: const Color(0xFF380800),
@@ -107,9 +111,9 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Loading maintenances...',
-                    style: TextStyle(
+                  Text(
+                    localizations.loadingMaintenances,
+                    style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                     ),
@@ -169,9 +173,9 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                               horizontal: 32,
                               vertical: 12,
                             ),
-                            child: const Text(
-                              'Retry',
-                              style: TextStyle(
+                            child: Text(
+                              localizations.retry,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -221,9 +225,9 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                             ),
                           ),
                           const SizedBox(width: 12),
-                          const Text(
-                            'Scheduled Maintenances',
-                            style: TextStyle(
+                          Text(
+                            localizations.scheduledMaintenances,
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF380800),
@@ -263,7 +267,7 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  'No scheduled maintenances',
+                                  localizations.noScheduledMaintenances,
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                     fontSize: 16,
@@ -319,9 +323,9 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                             ),
                           ),
                           const SizedBox(width: 12),
-                          const Text(
-                            'Maintenances Done',
-                            style: TextStyle(
+                          Text(
+                            localizations.maintenancesDone,
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF380800),
@@ -361,7 +365,7 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
-                                  'No completed maintenances',
+                                  localizations.noCompletedMaintenances,
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                     fontSize: 16,
@@ -418,9 +422,9 @@ class _MaintenanceViewState extends State<MaintenanceView> with SingleTickerProv
                     color: Colors.grey.shade400,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    'Pull to refresh',
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  Text(
+                    localizations.pullToRefresh,
+                    style: const TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ],
               ),
@@ -468,12 +472,23 @@ class MaintenanceCardWidget extends StatelessWidget {
     }
   }
 
-  String _formatState(maintenance_model.MaintenanceState state) {
-    return state.toJson();
+  String _formatState(maintenance_model.MaintenanceState state, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (state) {
+      case maintenance_model.MaintenanceState.pending:
+        return localizations.pending;
+      case maintenance_model.MaintenanceState.inProgress:
+        return localizations.inProgress;
+      case maintenance_model.MaintenanceState.completed:
+        return localizations.completed;
+      case maintenance_model.MaintenanceState.cancelled:
+        return localizations.cancelled;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM dd, yyyy - hh:mm a');
 
     return Container(
@@ -522,9 +537,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Date & Time',
-                                style: TextStyle(
+                              Text(
+                                localizations.dateAndTime,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -555,9 +570,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Location',
-                                style: TextStyle(
+                              Text(
+                                localizations.location,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -595,9 +610,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Mechanic',
-                                style: TextStyle(
+                              Text(
+                                localizations.mechanic,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -607,7 +622,7 @@ class MaintenanceCardWidget extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            card.mechanic?.username ?? 'Loading...',
+                            card.mechanic?.username ?? localizations.loading,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -628,9 +643,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                                 color: Colors.grey.shade600,
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Vehicle',
-                                style: TextStyle(
+                              Text(
+                                localizations.vehicle,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -642,7 +657,7 @@ class MaintenanceCardWidget extends StatelessWidget {
                           Text(
                             card.vehicle != null
                                 ? '${card.vehicle!.model.brand} ${card.vehicle!.model.name}'
-                                : 'Loading...',
+                                : localizations.loading,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -675,9 +690,9 @@ class MaintenanceCardWidget extends StatelessWidget {
                             color: Colors.grey.shade600,
                           ),
                           const SizedBox(width: 8),
-                          const Text(
-                            'Details',
-                            style: TextStyle(
+                          Text(
+                            localizations.details,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                               color: Colors.grey,
@@ -712,7 +727,7 @@ class MaintenanceCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        _formatState(card.maintenance.state),
+                        _formatState(card.maintenance.state, context),
                         style: TextStyle(
                           color: _getStatusTextColor(card.maintenance.state),
                           fontWeight: FontWeight.w600,
@@ -740,12 +755,12 @@ class MaintenanceCardWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
-                              children: const [
-                                Icon(Icons.receipt, color: Colors.white, size: 20),
-                                SizedBox(width: 8),
+                              children: [
+                                const Icon(Icons.receipt, color: Colors.white, size: 20),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'Expense',
-                                  style: TextStyle(
+                                  localizations.expense,
+                                  style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -789,16 +804,16 @@ class MaintenanceCardWidget extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(vertical: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.visibility,
                                       color: Color(0xFFFF6B35),
                                       size: 18,
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Text(
-                                      'See Expense Details',
-                                      style: TextStyle(
+                                      localizations.seeExpenseDetails,
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         color: Color(0xFFFF6B35),
                                       ),

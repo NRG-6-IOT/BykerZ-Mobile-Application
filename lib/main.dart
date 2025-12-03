@@ -2,6 +2,7 @@ import 'package:byker_z_mobile/iam/bloc/authentication/authentication_bloc.dart'
 import 'package:byker_z_mobile/iam/presentation/views/sign-in.page.dart';
 import 'package:byker_z_mobile/iam/services/authentication_service.dart';
 import 'package:byker_z_mobile/iam/services/profile_service.dart';
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:byker_z_mobile/notifications/bloc/notifications_bloc.dart';
 import 'package:byker_z_mobile/notifications/services/notifications_websocket_service.dart';
 import 'package:byker_z_mobile/vehicle_wellness/data/datasource/wellness_metric_datasource.dart';
@@ -15,10 +16,11 @@ import 'package:byker_z_mobile/vehicle_wellness/presentation/statemanagement/blo
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'l10n/bloc/locale/locale_bloc.dart';
 import 'notifications/services/notifications_service.dart';
 
-
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -47,6 +49,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+            create: (_) => LocaleBloc()
+        ),
+        BlocProvider(
           create: (_) => AuthenticationBloc(
             authenticationService: AuthenticationService(),
             profileService: ProfileService()
@@ -65,12 +70,19 @@ class MyApp extends StatelessWidget {
           create: (_)=> NotificationsBloc(notificationService: notificationService, webSocketService: webSocketService),
         )
       ],
-      child: MaterialApp(
-        title: 'BykerZ',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-          home: SignInPage(),
+      child: BlocBuilder<LocaleBloc,Locale>(
+        builder: (context, localeState) {
+          return MaterialApp(
+            title: 'BykerZ',
+            locale: localeState,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            ),
+              home: SignInPage(),
+          );
+        }
       )
     );
   }

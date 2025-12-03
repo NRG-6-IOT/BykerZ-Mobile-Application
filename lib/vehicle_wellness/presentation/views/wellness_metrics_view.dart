@@ -1,4 +1,5 @@
 // presentation/views/wellness_metrics_screen.dart
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../shared/presentation/widgets/app_drawer.dart';
@@ -13,6 +14,8 @@ class WellnessMetricsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     // Disparar la carga automáticamente cuando se construye el widget
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<WellnessMetricBloc>().add(
@@ -22,7 +25,7 @@ class WellnessMetricsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Metrics for Vehicle $vehicleId'),
+        title: Text('${l10n.metrics} $vehicleId'),
         backgroundColor: const Color(0xFFFF6B35),
         foregroundColor: Colors.white,
       ),
@@ -46,7 +49,7 @@ class WellnessMetricsScreen extends StatelessWidget {
                         LoadWellnessMetricsByVehicleIdEvent(vehicleId),
                       );
                     },
-                    child: const Text('Try again'),
+                    child: Text(l10n.tryAgain),
                   ),
                 ],
               ),
@@ -54,13 +57,13 @@ class WellnessMetricsScreen extends StatelessWidget {
           }
 
           if (state is WellnessMetricsEmpty) {
-            return const Center(
-              child: Text('There are no vehicle_wellness for this vehicle'),
+            return Center(
+              child: Text(l10n.noWellnessMetrics),
             );
           }
 
           if (state is WellnessMetricsLoaded) {
-            return WellnessMetricList(metrics: state.metrics); // ✅ Usa widget separado
+            return WellnessMetricList(metrics: state.metrics);
           }
 
           // Estado inicial - cargar automáticamente
@@ -68,7 +71,7 @@ class WellnessMetricsScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Loading vehicle_wellness...'),
+                Text(l10n.loadingWellnessMetrics),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
@@ -76,7 +79,7 @@ class WellnessMetricsScreen extends StatelessWidget {
                       LoadWellnessMetricsByVehicleIdEvent(vehicleId),
                     );
                   },
-                  child: const Text('Load vehicle_wellness'),
+                  child: Text(l10n.loadWellnessMetrics),
                 ),
               ],
             ),
