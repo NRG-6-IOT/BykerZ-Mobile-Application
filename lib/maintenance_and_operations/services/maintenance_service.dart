@@ -28,6 +28,18 @@ class MaintenanceService {
     throw Exception('Failed to fetch maintenances by mechanic: ${response.statusCode} - ${response.body}');
   }
 
+  Future<List<Maintenance>> getMaintenancesByOwnerId(int ownerId) async {
+    final response = await ApiClient.get('maintenance/owner/$ownerId');
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
+      return data
+          .map((e) => Maintenance.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+    throw Exception('Failed to fetch maintenances by mechanic: ${response.statusCode} - ${response.body}');
+  }
+
   // GET /maintenance/vehicle/{vehicleId}
   Future<List<Maintenance>> getMaintenancesByVehicleId(int vehicleId) async {
     final response = await ApiClient.get('maintenance/vehicle/$vehicleId');
