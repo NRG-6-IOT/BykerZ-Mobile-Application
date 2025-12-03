@@ -31,8 +31,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       if (roleId != null) {
         final vehicles = await vehicleService.getVehiclesByOwnerId(roleId);
         final expenses = await expenseService.getAllExpenses();
-        final maintenances = List.of([]); //Planeo reemplazar esto con la lógica luego;
-        emit(DashboardLoaded(vehicles: vehicles, maintenances: maintenances as List<Maintenance>, expenses: expenses));
+        final maintenances = await maintenanceService.getMaintenancesByOwnerId(roleId);
+        emit(DashboardLoaded(vehicles: vehicles, maintenances: maintenances, expenses: expenses));
       } else {
         throw Exception("OwnerId could not be loaded");
       }
