@@ -103,7 +103,7 @@ class _SignInState extends State<SignInPage> with SingleTickerProviderStateMixin
                           child: SizedBox(
                             height: 120,
                             child: Image.asset(
-                              'images/bykerz.png',
+                              'assets/images/bykerz.png',
                               fit: BoxFit.contain,
                             ),
                           ),
