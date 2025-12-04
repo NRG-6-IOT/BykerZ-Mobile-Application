@@ -72,6 +72,8 @@ flutter:
     - assets/images/
     - assets/images/vehicle.png
     - assets/images/bykerz.png
+    - images/vehicle.png
+    - images/bykerz.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
