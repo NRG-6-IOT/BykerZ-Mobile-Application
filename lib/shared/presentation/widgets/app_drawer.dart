@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/iam/presentation/views/sign-in.page.dart';
 import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:byker_z_mobile/l10n/components/language_switcher_button.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/presentation/views/expenses.dart';
@@ -72,8 +73,12 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout, color: Colors.red),
             title: Text(localizations.logout, style: TextStyle(color: Colors.red)),
             onTap: () {
-              Navigator.of(context).pop();
-              // TO-DO: Implementar lógica de cierre de sesión
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const SignInPage(),
+                ),
+              );
+
             },
           )
         ],
