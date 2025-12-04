@@ -25,9 +25,14 @@ class NotificationWebSocketService {
       // Cerrar conexión anterior si existe
       await disconnect();
 
-      // Conectar al WebSocket directamente - SIN STOMP COMPLICADO
+      // localhost:
+      //_channel = WebSocketChannel.connect(
+      //  Uri.parse('ws://10.0.2.2:8080/ws-wellness'),
+      //);
+
+      // producción en Render:
       _channel = WebSocketChannel.connect(
-        Uri.parse('ws://10.0.2.2:8080/ws-wellness'),
+        Uri.parse('wss://bykerz-backend.onrender.com/ws-wellness'),
       );
 
       _isConnected = true;

@@ -213,8 +213,8 @@ class _NotificationsViewState extends State<NotificationsView> {
           : (state as NotificationsByVehicleIdLoaded).notifications;
 
       if (notifications.isEmpty) {
-        return const Center(
-          child: Text('There are no notifications available.'),
+        return Center(
+          child: Text(l10n.noNotificationsAvailable),
         );
       }
 
