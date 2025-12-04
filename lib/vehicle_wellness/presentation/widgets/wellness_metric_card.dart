@@ -48,12 +48,6 @@ class WellnessMetricCard extends StatelessWidget {
               value: '${l10n.co2}: ${metric.CO2Ppm}${l10n.ppm} | ${l10n.nh3}: ${metric.NH3Ppm}${l10n.ppm} | ${l10n.benzene}: ${metric.BenzenePpm}${l10n.ppm}',
             ),
 
-            // Condiciones ambientales
-            DetailRow(
-              label: l10n.conditions,
-              value: '${l10n.temperature}: ${metric.temperatureCelsius}°C | ${l10n.humidity}: ${metric.humidityPercentage}%',
-            ),
-
             // Presión atmosférica
             DetailRow(
               label: l10n.pressure,

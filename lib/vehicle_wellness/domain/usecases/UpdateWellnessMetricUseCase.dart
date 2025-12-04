@@ -15,7 +15,6 @@ class UpdateWellnessMetricUseCase {
     _validateVehicleId(metric.vehicleId);
     _validateCoordinates(metric.latitude, metric.longitude);
     _validateAirQuality(metric.CO2Ppm, metric.NH3Ppm, metric.BenzenePpm);
-    _validateEnvironmentalConditions(metric.temperatureCelsius, metric.humidityPercentage);
     _validateAtmosphericPressure(metric.pressureHpa);
     _validateStatusImpact(metric.impactDetected);
 

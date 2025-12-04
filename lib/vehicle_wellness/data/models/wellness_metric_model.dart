@@ -10,7 +10,6 @@ class WellnessMetricModel {
   final double NH3Ppm;
   final double BenzenePpm;
   final double temperatureCelsius;
-  final double humidityPercentage;
   final double pressureHpa;
   final bool impactDetected;
   final DateTime? registeredAt; // Opcional en el modelo
@@ -24,7 +23,6 @@ class WellnessMetricModel {
     required this.NH3Ppm,
     required this.BenzenePpm,
     required this.temperatureCelsius,
-    required this.humidityPercentage,
     required this.pressureHpa,
     required this.impactDetected,
     this.registeredAt,
@@ -40,7 +38,6 @@ class WellnessMetricModel {
       NH3Ppm: json["NH3Ppm"] as double,
       BenzenePpm: json["BenzenePpm"] as double,
       temperatureCelsius: json["temperatureCelsius"] as double,
-      humidityPercentage: json["humidityPercentage"] as double,
       pressureHpa: json["pressureHpa"] as double,
       impactDetected: json["impactDetected"] as bool,
       registeredAt: _parseDateTime(json["registeredAt"]),
@@ -71,7 +68,6 @@ class WellnessMetricModel {
       NH3Ppm: NH3Ppm,
       BenzenePpm: BenzenePpm,
       temperatureCelsius: temperatureCelsius,
-      humidityPercentage: humidityPercentage,
       pressureHpa: pressureHpa,
       impactDetected: impactDetected,
       registeredAt: registeredAt,
@@ -93,7 +89,6 @@ class WellnessMetricModel {
       'NH3Ppm': NH3Ppm,
       'BenzenePpm': BenzenePpm,
       'temperatureCelsius': temperatureCelsius,
-      'humidityPercentage': humidityPercentage,
       'pressureHpa': pressureHpa,
       'impactDetected': impactDetected,
       'registeredAt': registeredAt?.toIso8601String(),
@@ -110,7 +105,6 @@ class WellnessMetricModel {
       NH3Ppm: entity.NH3Ppm,
       BenzenePpm: entity.BenzenePpm,
       temperatureCelsius: entity.temperatureCelsius,
-      humidityPercentage: entity.humidityPercentage,
       pressureHpa: entity.pressureHpa,
       impactDetected: entity.impactDetected,
       registeredAt: entity.registeredAt,

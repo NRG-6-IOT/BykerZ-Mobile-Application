@@ -8,7 +8,6 @@ class WellnessMetric {
   final double NH3Ppm;
   final double BenzenePpm;
   final double temperatureCelsius;
-  final double humidityPercentage;
   final double pressureHpa;
   final bool impactDetected;
   final DateTime? registeredAt;
@@ -22,7 +21,6 @@ class WellnessMetric {
     required this.NH3Ppm,
     required this.BenzenePpm,
     required this.temperatureCelsius,
-    required this.humidityPercentage,
     required this.pressureHpa,
     required this.impactDetected,
     required this.registeredAt,
