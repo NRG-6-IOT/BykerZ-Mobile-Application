@@ -46,10 +46,6 @@ class WellnessMetricCard extends StatelessWidget {
             ),
 
             // Condiciones ambientales
-            DetailRow(
-              label: 'Conditions',
-              value: 'Temp: ${metric.temperatureCelsius}°C | Hum: ${metric.humidityPercentage}%',
-            ),
 
             // Presión atmosférica
             DetailRow(
