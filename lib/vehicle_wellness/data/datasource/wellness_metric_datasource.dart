@@ -1,11 +1,13 @@
 // data/data_sources/wellness_metric_data_source.dart
 import 'dart:convert';
+import 'package:byker_z_mobile/shared/client/api.client.dart';
 import 'package:byker_z_mobile/vehicle_wellness/data/datasource/token_datasource.dart';
 import 'package:http/http.dart' as http;
 import '../models/wellness_metric_model.dart';
 
 class WellnessMetricDataSource {
-  final String baseUrl= 'http://10.0.2.2:8080/api/v1/' ;
+  final String baseUrl = ApiClient.baseUrl;
+  //final String baseUrl= 'http://10.0.2.2:8080/api/v1/' ;
   //final String baseUrl= 'https://backend-web-services-1.onrender.com/api/v1/' ;
   final String basePath = 'metrics';
 

@@ -1,5 +1,5 @@
-import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicle_create_dialog.dart';
-import 'package:byker_z_mobile/vehicle_management/presentation/views/vehicle_details.dart';
+import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicle_create_dialog.dart';
+import 'package:byker_z_mobile/vehicle_management/presentation/pages/vehicle_details.dart';
 import 'package:byker_z_mobile/vehicle_management/services/model_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,10 +9,7 @@ import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehi
 import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehicle_state.dart';
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_model.dart';
 import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart';
-import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
-import '../../../notifications/presentation/views/notifications_view.dart';
-import '../../../vehicle_wellness/presentation/views/wellness_metrics_view.dart';
-
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 
 class Vehicles extends StatelessWidget {
   const Vehicles({super.key});
@@ -20,101 +17,90 @@ class Vehicles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-      VehicleBloc(vehicleService: VehicleService(), modelService: ModelService())
-        ..add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0)),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Vehicles'),
-          backgroundColor: const Color(0xFFFF6B35),
-        ),
-        drawer: const AppDrawer(),
-        body: const _VehiclesBody(),
-        floatingActionButton: const _AddVehicleButton(),
-      ),
+      create: (context) => VehicleBloc(
+        vehicleService: VehicleService(),
+        modelService: ModelService(),
+      )..add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0)),
+      child: const VehiclesView(),
     );
   }
 }
 
-class _VehiclesBody extends StatelessWidget {
-  const _VehiclesBody();
+class VehiclesView extends StatelessWidget {
+  const VehiclesView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VehicleBloc, VehicleState>(
-      builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'My Vehicles',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF380800),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh, color: Color(0xFF380800)),
-                    onPressed: () {
-                      context.read<VehicleBloc>()
-                          .add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0));
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Expanded(child: _buildVehicleList(context, state)),
-            ],
+    final localizations = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: Text(
+          localizations.vehicles,
+          style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.5),
+        ),
+        backgroundColor: const Color(0xFFFF6B35),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: () {
+              context.read<VehicleBloc>().add(FetchAllVehiclesFromOwnerIdEvent(ownerId: 0));
+            },
           ),
-        );
-      },
+        ],
+      ),
+      drawer: const AppDrawer(),
+      body: BlocBuilder<VehicleBloc, VehicleState>(
+        builder: (context, state) {
+          if (state is VehicleLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFFFF6B35)),
+            );
+          }
+
+          if (state is VehicleError) {
+            return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
+          }
+
+          if (state is VehiclesLoaded) {
+            if (state.vehicles.isEmpty) {
+              return Center(child: Text(localizations.noVehiclesFound));
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: state.vehicles.length,
+              itemBuilder: (context, index) => _AnimatedVehicleCard(
+                index: index,
+                child: VehicleCard(vehicle: state.vehicles[index]),
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _openCreateDialog(context),
+        backgroundColor: const Color(0xFFFF6B35),
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add_rounded),
+        label: Text(localizations.addVehicle, style: const TextStyle(fontWeight: FontWeight.w600)),
+        elevation: 4,
+      ),
     );
   }
 
-  Widget _buildVehicleList(BuildContext context, VehicleState state) {
-    if (state is VehicleLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: Color(0xFF380800)),
-      );
-    }
-
-    if (state is VehicleError) {
-      return Center(
-        child: Text(
-          state.message,
-          style: const TextStyle(color: Colors.red),
-        ),
-      );
-    }
-
-    if (state is VehiclesLoaded) {
-      if (state.vehicles.isEmpty) {
-        return const Center(
-          child: Text(
-            'No vehicles found',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
-          ),
-        );
-      }
-
-      return ListView.separated(
-        itemCount: state.vehicles.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
-        itemBuilder: (context, index) =>
-            VehicleCard(vehicle: state.vehicles[index]),
-      );
-    }
-
-    return const Center(
-      child: Text(
-        'Pull to refresh or add a new vehicle',
-        style: TextStyle(color: Colors.grey),
+  void _openCreateDialog(BuildContext context) async {
+    final vehicleBloc = context.read<VehicleBloc>();
+    await showDialog(
+      context: context,
+      builder: (_) => BlocProvider.value(
+        value: vehicleBloc,
+        child: const VehicleCreateDialog(),
       ),
     );
   }
@@ -127,246 +113,206 @@ class VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      shape: RoundedRectangleBorder(
+    final localizations = AppLocalizations.of(context)!;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Stack(
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: context.read<VehicleBloc>(),
-                  child: VehicleDetailsPage(vehicleId: vehicle.id),
-                ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                value: context.read<VehicleBloc>(),
+                child: VehicleDetailsPage(vehicleId: vehicle.id),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
-                  ),
-                  child: Container(
-                    color: Colors.grey[200],
-                    height: 160,
-                    width: double.infinity,
-                    child: Image.asset(
-                      'assets/images/vehicle.png',
-                      fit: BoxFit.cover,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image Header
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    child: Container(
+                      height: 150,
+                      width: double.infinity,
+                      color: Colors.grey.shade100,
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/vehicle.png',
+                          fit: BoxFit.contain,
+                          height: 120,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${vehicle.model.brand} - ${vehicle.model.name}',
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        vehicle.model.type,
                         style: const TextStyle(
-                          fontSize: 20,
+                          color: Colors.white,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF380800),
                         ),
                       ),
-
-                      const SizedBox(height: 6),
-
-                      Text(
-                        'Plate: ${vehicle.plate}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      _buildDetailRow('Model Year', vehicle.model.modelYear),
-                      _buildDetailRow('Type', vehicle.model.type),
-                      _buildDetailRow('Origin Country', vehicle.model.originCountry),
-                      _buildDetailRow('Produced At', vehicle.model.producedAt),
-                      _buildDetailRow('Displacement', vehicle.model.displacement),
-                      _buildDetailRow('Octane', vehicle.model.octane),
-
-                      const SizedBox(height: 20),
-
-                      // Fila con ambos botones - Metrics a la izquierda, View Details a la derecha
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Botón de Metrics a la izquierda
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              _navigateToWellnessMetrics(context, vehicle.id);
-                            },
-                            label: const Text(
-                              'Metrics',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFFF6B35),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              elevation: 2,
-                            ),
-                          ),
-
-                          // View Details a la derecha
-                          GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: context.read<VehicleBloc>(),
-                                  child: VehicleDetailsPage(vehicleId: vehicle.id),
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              'View Details >',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.orange.shade700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // 🔔 Icono de notificaciones en esquina superior derecha
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    ),
                   ),
                 ],
               ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.notifications_outlined,
-                  color: Color(0xFFFF6B35),
-                  size: 20,
+
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${vehicle.model.brand} ${vehicle.model.name}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1A1A1A),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF6B35).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            vehicle.year,
+                            style: const TextStyle(
+                              color: Color(0xFFFF6B35),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.credit_card_rounded, size: 16, color: Colors.grey.shade500),
+                        const SizedBox(width: 4),
+                        Text(
+                          vehicle.plate,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Divider(height: 1, color: Color(0xFFEEEEEE)),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          localizations.viewDetails,
+                          style: const TextStyle(
+                            color: Color(0xFFFF6B35),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 16,
+                          color: Color(0xFFFF6B35),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  _navigateToNotifications(context, vehicle.id);
-                },
-                tooltip: 'Ver notificaciones',
-                padding: const EdgeInsets.all(6),
-                constraints: const BoxConstraints(),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  void _navigateToWellnessMetrics(BuildContext context, int vehicleId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => WellnessMetricsScreen(vehicleId: vehicleId),
-      ),
-    );
-  }
-
-  void _navigateToNotifications(BuildContext context, int vehicleId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => NotificationsView(specificVehicleId: vehicleId),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
-              ),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
 }
 
-class _AddVehicleButton extends StatelessWidget {
-  const _AddVehicleButton();
+class _AnimatedVehicleCard extends StatefulWidget {
+  final int index;
+  final Widget child;
+
+  const _AnimatedVehicleCard({required this.index, required this.child});
+
+  @override
+  State<_AnimatedVehicleCard> createState() => _AnimatedVehicleCardState();
+}
+
+class _AnimatedVehicleCardState extends State<_AnimatedVehicleCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 400 + (widget.index * 100)),
+      vsync: this,
+    );
+
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => _openCreateDialog(context),
-      backgroundColor: const Color(0xFFFF6B35),
-      child: const Icon(Icons.add, color: Colors.white, size: 36),
-    );
-  }
-
-  void _openCreateDialog(BuildContext context) async {
-    final result = await showDialog(
-      context: context,
-      builder: (_) => BlocProvider.value(
-        value: context.read<VehicleBloc>(),
-        child: VehicleCreateDialog(),
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: widget.child,
       ),
     );
-
-    if (result != null && result is VehicleCreateRequest) {
-      context.read<VehicleBloc>().add(
-        CreateVehicleForOwnerIdEvent(request: result),
-      );
-    }
   }
 }

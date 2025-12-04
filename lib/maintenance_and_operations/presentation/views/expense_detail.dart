@@ -1,3 +1,4 @@
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:byker_z_mobile/maintenance_and_operations/bloc/expense/expense_bloc.dart';
@@ -29,13 +30,14 @@ class ExpenseDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         elevation: 0,
-        title: const Text(
-          'Expense Details',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        title: Text(
+          localizations.expenseDetails,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         backgroundColor: const Color(0xFF380800),
         foregroundColor: Colors.white,
@@ -65,9 +67,9 @@ class ExpenseDetailView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Loading details...',
-                    style: TextStyle(
+                  Text(
+                    localizations.loadingDetails,
+                    style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                     ),
@@ -127,9 +129,9 @@ class ExpenseDetailView extends StatelessWidget {
                               horizontal: 32,
                               vertical: 12,
                             ),
-                            child: const Text(
-                              'Go Back',
-                              style: TextStyle(
+                            child: Text(
+                              localizations.goBack,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -148,10 +150,10 @@ class ExpenseDetailView extends StatelessWidget {
             return ExpenseDetailContent(expense: state.expense);
           }
 
-          return const Center(
+          return Center(
             child: Text(
-              'Loading expense details...',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              localizations.loadingExpenseDetails,
+              style: const TextStyle(color: Colors.grey, fontSize: 16),
             ),
           );
         },
@@ -187,8 +189,32 @@ class ExpenseDetailContent extends StatelessWidget {
     }
   }
 
+  String _getItemTypeDisplayName(String type, BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    if (localizations == null) return type;
+
+    switch (type) {
+      case 'FINE':
+        return localizations.itemTypeFine;
+      case 'PARKING':
+        return localizations.itemTypeParking;
+      case 'PAYMENT':
+        return localizations.itemTypePayment;
+      case 'SUPPLIES':
+        return localizations.itemTypeSupplies;
+      case 'TAX':
+        return localizations.itemTypeTax;
+      case 'TOOLS':
+        return localizations.itemTypeTools;
+      default:
+        return type;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -241,9 +267,9 @@ class ExpenseDetailContent extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Expense Name',
-                              style: TextStyle(
+                            Text(
+                              localizations.expenseName,
+                              style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 12,
                               ),
@@ -329,9 +355,9 @@ class ExpenseDetailContent extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
-                          'Items',
-                          style: TextStyle(
+                        Text(
+                          localizations.items,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             color: Color(0xFF380800),
@@ -353,7 +379,7 @@ class ExpenseDetailContent extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'No items found',
+                              localizations.noItemsFound,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.grey.shade500,
@@ -420,7 +446,7 @@ class ExpenseDetailContent extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        item.itemType,
+                                        _getItemTypeDisplayName(item.itemType, context),
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                           fontSize: 13,
@@ -509,12 +535,12 @@ class ExpenseDetailContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    children: const [
-                      Icon(Icons.monetization_on, color: Colors.white, size: 28),
-                      SizedBox(width: 12),
+                    children: [
+                      const Icon(Icons.monetization_on, color: Colors.white, size: 28),
+                      const SizedBox(width: 12),
                       Text(
-                        'Final Price',
-                        style: TextStyle(
+                        localizations.finalPrice,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -539,4 +565,3 @@ class ExpenseDetailContent extends StatelessWidget {
     );
   }
 }
-

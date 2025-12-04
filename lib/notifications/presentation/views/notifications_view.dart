@@ -1,6 +1,7 @@
 // views/notifications_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../bloc/notifications_bloc.dart';
 import '../../models/notification_model.dart';
 import '../widgets/notification_card.dart';
@@ -59,15 +60,15 @@ class _NotificationsViewState extends State<NotificationsView> {
               Text(notification.message),
               const SizedBox(height: 16),
               Text(
-                'Type: ${notification.type}',
+                '${AppLocalizations.of(context)!.type}: ${notification.type}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                'Severity: ${notification.severity}',
+                '${AppLocalizations.of(context)!.severity}: ${notification.severity}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                'Date: ${_formatDetailedDate(notification.occurredAt)}',
+                '${AppLocalizations.of(context)!.date}: ${_formatDetailedDate(notification.occurredAt)}',
                 style: const TextStyle(color: Colors.grey),
               ),
             ],
@@ -80,11 +81,11 @@ class _NotificationsViewState extends State<NotificationsView> {
                 _markAsRead(notification.id!);
                 Navigator.pop(context);
               },
-              child: const Text('Mark as read'),
+              child: Text(AppLocalizations.of(context)!.markAsRead),
             ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(AppLocalizations.of(context)!.close),
           ),
         ],
       ),
@@ -97,12 +98,13 @@ class _NotificationsViewState extends State<NotificationsView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.specificVehicleId != null
-              ? 'Alerts - Vehicle ${widget.specificVehicleId}'
-              : 'All notifications',
+              ? '${l10n.alertsForVehicle} ${widget.specificVehicleId}'
+              : l10n.allNotifications,
         ),
         backgroundColor: const Color(0xFFFF6B35),
         actions: [
@@ -118,11 +120,11 @@ class _NotificationsViewState extends State<NotificationsView> {
           if (state is NewNotificationReceived) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('🚨 New Alert: ${state.notification.title}'),
+                content: Text('🚨 ${l10n.newAlert}: ${state.notification.title}'),
                 backgroundColor: _getSeverityColor(state.notification.severity),
                 duration: const Duration(seconds: 3),
                 action: SnackBarAction(
-                  label: 'See more',
+                  label: l10n.seeMore,
                   onPressed: () {
                     _showNotificationDetails(state.notification);
                   },
@@ -161,8 +163,10 @@ class _NotificationsViewState extends State<NotificationsView> {
   }
 
   Widget _buildContent(NotificationsState state) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (state is NotificationsLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator());
     }
 
     if (state is NotificationsError) {
@@ -180,7 +184,7 @@ class _NotificationsViewState extends State<NotificationsView> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadNotifications,
-              child: const Text('Reload notifications'),
+              child: Text(l10n.reloadNotifications),
             ),
           ],
         ),
