@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 
 class ApiClient {
   static String? _token;
+
   static const String _baseUrl = 'https://bykerz-backend.onrender.com/api/v1/';
+
 
   static String get baseUrl => _baseUrl;
 

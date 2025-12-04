@@ -6,7 +6,6 @@ import 'package:byker_z_mobile/iam/services/profile_service.dart';
 import 'package:byker_z_mobile/shared/presentation/views/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../bloc/profile/profile_bloc.dart';
 import '../../models/sign-in_request.dart';
 
@@ -17,15 +16,32 @@ class SignInPage extends StatefulWidget {
   State<SignInPage> createState() => _SignInState();
 }
 
-class _SignInState extends State<SignInPage> {
+class _SignInState extends State<SignInPage> with SingleTickerProviderStateMixin {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool hasMechanic = true;
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    _controller.forward();
+  }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -44,8 +60,6 @@ class _SignInState extends State<SignInPage> {
             ),
           ),
         );
-      } else {
-        // If the profile retrieval fails, do nothing?
       }
     } catch (e) {
       if (!mounted) return;
@@ -57,9 +71,9 @@ class _SignInState extends State<SignInPage> {
     return BlocProvider(
       create: (context) => AuthenticationBloc(
           authenticationService: AuthenticationService(),
-          profileService: ProfileService()
-      ),
+          profileService: ProfileService()),
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is SignInSuccess) {
@@ -67,114 +81,166 @@ class _SignInState extends State<SignInPage> {
             }
           },
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Text(
-                    'BykerZ',
-                    style: const TextStyle(
-                      fontSize: 70,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF481C0D),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 200,
-                    child: Image.asset(
-                      'images/bykerz.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color(0xFF000000),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      hintText: 'Username',
-                      prefixIcon: Icon(Icons.person, color: Colors.grey),
-                      filled: true,
-                      fillColor: Color(0xFFF3F3F3),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Password',
-                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
-                      filled: true,
-                      fillColor: Color(0xFFF3F3F3),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  if (state is AuthenticationFailure)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Text(
-                        state.error,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: state is AuthenticationLoading
-                          ? null
-                          : () {
-                        context.read<AuthenticationBloc>().add(
-                          SignInEvent(
-                            request: SignInRequest(
-                              username: _usernameController.text,
-                              password: _passwordController.text
-                            )
+            return FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 60),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Logo Animation
+                      Hero(
+                        tag: 'logo',
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF6B35).withOpacity(0.1),
+                            shape: BoxShape.circle,
                           ),
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(
-                            const Color(0xFFFF6B35)),
-                        shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            height: 120,
+                            child: Image.asset(
+                              'assets/images/bykerz.png',
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
-                      child: state is AuthenticationLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                        'Sign In',
+                      const SizedBox(height: 32),
+
+                      const Text(
+                        'Welcome to BykerZ',
                         style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFF1A1A1A),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Sign in to manage your vehicles',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(height: 48),
+
+                      // Username
+                      _buildTextField(
+                        controller: _usernameController,
+                        label: 'Username',
+                        icon: Icons.person_outline_rounded,
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Password
+                      _buildTextField(
+                        controller: _passwordController,
+                        label: 'Password',
+                        icon: Icons.lock_outline_rounded,
+                        isPassword: true,
+                      ),
+
+                      if (state is AuthenticationFailure)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.error_outline, color: Colors.red, size: 20),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  state.error,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      const SizedBox(height: 32),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: state is AuthenticationLoading
+                              ? null
+                              : () {
+                            context.read<AuthenticationBloc>().add(
+                              SignInEvent(
+                                request: SignInRequest(
+                                  username: _usernameController.text,
+                                  password: _passwordController.text,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF6B35),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 2,
+                          ),
+                          child: state is AuthenticationLoading
+                              ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                              : const Text(
+                            'Sign In',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: const Color(0xFFFF6B35)),
+        filled: true,
+        fillColor: Colors.grey.shade50,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade200),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFFFF6B35), width: 2),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
     );
   }

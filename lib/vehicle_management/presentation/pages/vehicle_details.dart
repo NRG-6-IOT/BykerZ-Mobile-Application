@@ -4,6 +4,7 @@ import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehi
 import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehicle_event.dart';
 import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehicle_state.dart';
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_model.dart';
+import 'package:byker_z_mobile/l10n/app_localizations.dart';
 
 class VehicleDetailsPage extends StatelessWidget {
   final int vehicleId;
@@ -12,146 +13,200 @@ class VehicleDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: BlocProvider.of<VehicleBloc>(context)
-        ..add(FetchVehicleByIdEvent(vehicleId: vehicleId)),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Vehicle Details"),
-          backgroundColor: const Color(0xFF380800),
-        ),
-        body: BlocBuilder<VehicleBloc, VehicleState>(
-          builder: (context, state) {
-            if (state is VehicleLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    final localizations = AppLocalizations.of(context)!;
+    context.read<VehicleBloc>().add(FetchVehicleByIdEvent(vehicleId: vehicleId));
 
-            if (state is VehicleError) {
-              return Center(
-                child: Text(
-                  state.message,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              );
-            }
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      body: BlocBuilder<VehicleBloc, VehicleState>(
+        builder: (context, state) {
+          if (state is VehicleLoading) {
+            return const Center(child: CircularProgressIndicator(color: Color(0xFFFF6B35)));
+          }
 
-            if (state is VehicleLoaded) {
-              final Vehicle vehicle = state.vehicle;
-              final model = vehicle.model;
+          if (state is VehicleError) {
+            return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
+          }
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      height: 220,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/vehicle.png'),
+          if (state is VehicleLoaded) {
+            final vehicle = state.vehicle;
+            final model = vehicle.model;
+
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 240.0,
+                  pinned: true,
+                  backgroundColor: const Color(0xFFFF6B35),
+                  foregroundColor: Colors.white,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(
+                      "${model.brand} ${model.name}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
+                      ),
+                    ),
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          'assets/images/vehicle.png',
                           fit: BoxFit.cover,
                         ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        "${model.brand} ${model.name}",
-                        style: const TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF380800),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.7),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-
-                    _section(
-                      title: "Vehicle Information",
-                      children: [
-                        _row("Plate", vehicle.plate),
-                        _row("Year", vehicle.year),
-                        _row("Model Year", model.modelYear),
-                        _row("Type", model.type),
                       ],
                     ),
-
-                    _section(
-                      title: "Model Specifications",
-                      children: [
-                        _row("Brand", model.brand),
-                        _row("Country of Origin", model.originCountry),
-                        _row("Produced At", model.producedAt),
-                        _row("Displacement", model.displacement),
-                        _row("Potency", model.potency),
-                        _row("Engine Type", model.engineType),
-                        _row("Torque", model.engineTorque),
-                        _row("Weight", model.weight),
-                        _row("Transmission", model.transmission),
-                        _row("Brakes", model.brakes),
-                        _row("Tank Capacity", model.tank),
-                        _row("Seat Height", model.seatHeight),
-                        _row("Consumption", model.consumption),
-                        _row("Price", model.price),
-                        _row("Oil Capacity", model.oilCapacity),
-                        _row("Connectivity", model.connectivity),
-                        _row("Durability", model.durability),
-                        _row("Octane", model.octane),
-                      ],
-                    ),
-
-                    const SizedBox(height: 30),
-                  ],
+                  ),
                 ),
-              );
-            }
 
-            return const SizedBox.shrink();
-          },
-        ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _sectionTitle(localizations.vehicleInformation),
+                        const SizedBox(height: 12),
+                        _InfoCard(
+                          children: [
+                            _InfoRow(localizations.plate, vehicle.plate, Icons.tag),
+                            _InfoRow(localizations.year, vehicle.year, Icons.calendar_today),
+                            _InfoRow(localizations.modelYear, model.modelYear, Icons.history),
+                            _InfoRow(localizations.type, model.type, Icons.category),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+                        _sectionTitle(localizations.technicalSpecifications),
+                        const SizedBox(height: 12),
+                        _InfoCard(
+                          children: [
+                            _InfoRow(localizations.engine, model.displacement, Icons.engineering),
+                            _InfoRow(localizations.power, model.potency, Icons.speed),
+                            _InfoRow(localizations.torque, model.engineTorque, Icons.bolt),
+                            _InfoRow(localizations.weight, model.weight, Icons.monitor_weight),
+                            _InfoRow(localizations.fuelTank, model.tank, Icons.local_gas_station),
+                            _InfoRow(localizations.transmission, model.transmission, Icons.settings),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+                        _sectionTitle("Additional Info"), // Ajustar con localizations si existe
+                        const SizedBox(height: 12),
+                        _InfoCard(
+                          children: [
+                            _InfoRow("Produced At", model.producedAt, Icons.public),
+                            _InfoRow("Price", model.price, Icons.attach_money),
+                            _InfoRow("Octane", model.octane, Icons.local_fire_department),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
 
-  Widget _section({required String title, required List<Widget> children}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF380800),
-                  )),
-              const SizedBox(height: 12),
-              ...children,
-            ],
+  Widget _sectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF1A1A1A),
+        letterSpacing: 0.5,
+      ),
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  final List<Widget> children;
+  const _InfoCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
-        ),
+        ],
       ),
+      child: Column(children: children),
     );
   }
+}
 
-  Widget _row(String label, String value) {
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+
+  const _InfoRow(this.label, this.value, this.icon);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w600)),
-          Flexible(
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: const TextStyle(fontSize: 14),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFF6B35).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 18, color: const Color(0xFFFF6B35)),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

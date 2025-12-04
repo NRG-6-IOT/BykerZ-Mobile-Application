@@ -769,6 +769,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'N/A'**
   String get notAvailable;
+
+  /// No description provided for @addNewVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Vehicle'**
+  String get addNewVehicle;
+
+  /// No description provided for @plateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate (e.g. 1234-XY)'**
+  String get plateFormat;
+
+  /// No description provided for @invalidPlateFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid format. Must be 1234-XY'**
+  String get invalidPlateFormat;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @brand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get brand;
+
+  /// No description provided for @model.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get model;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @addVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Vehicle'**
+  String get addVehicle;
+
+  /// No description provided for @noVehiclesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No vehicles found'**
+  String get noVehiclesFound;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @vehicleInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Information'**
+  String get vehicleInformation;
+
+  /// No description provided for @plate.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate'**
+  String get plate;
+
+  /// No description provided for @modelYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Model Year'**
+  String get modelYear;
+
+  /// No description provided for @technicalSpecifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical Specifications'**
+  String get technicalSpecifications;
+
+  /// No description provided for @engine.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine'**
+  String get engine;
+
+  /// No description provided for @power.
+  ///
+  /// In en, this message translates to:
+  /// **'Power'**
+  String get power;
+
+  /// No description provided for @torque.
+  ///
+  /// In en, this message translates to:
+  /// **'Torque'**
+  String get torque;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @fuelTank.
+  ///
+  /// In en, this message translates to:
+  /// **'Fuel Tank'**
+  String get fuelTank;
+
+  /// No description provided for @transmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Transmission'**
+  String get transmission;
 }
 
 class _AppLocalizationsDelegate

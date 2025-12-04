@@ -6,8 +6,9 @@ import './token_service.dart';
 import '../models/notification_model.dart';
 
 class NotificationService {
-  //final String baseUrl = 'http://10.0.2.2:8080/api/v1/';
+
   final String baseUrl = ApiClient.baseUrl;
+
   final String basePath = 'notifications';
 
   // ✅ MÉTODO PARA HEADERS COMUNES

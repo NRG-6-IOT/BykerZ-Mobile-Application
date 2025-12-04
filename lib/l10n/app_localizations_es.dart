@@ -351,4 +351,64 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get notAvailable => 'N/D';
+
+  @override
+  String get addNewVehicle => 'Agregar Nuevo Vehículo';
+
+  @override
+  String get plateFormat => 'Placa (ej. 1234-XY)';
+
+  @override
+  String get invalidPlateFormat => 'Formato inválido. Debe ser 1234-XY';
+
+  @override
+  String get year => 'Año';
+
+  @override
+  String get brand => 'Marca';
+
+  @override
+  String get model => 'Modelo';
+
+  @override
+  String get create => 'Crear';
+
+  @override
+  String get addVehicle => 'Agregar Vehículo';
+
+  @override
+  String get noVehiclesFound => 'No se encontraron vehículos';
+
+  @override
+  String get viewDetails => 'Ver Detalles';
+
+  @override
+  String get vehicleInformation => 'Información del Vehículo';
+
+  @override
+  String get plate => 'Placa';
+
+  @override
+  String get modelYear => 'Año del Modelo';
+
+  @override
+  String get technicalSpecifications => 'Especificaciones Técnicas';
+
+  @override
+  String get engine => 'Motor';
+
+  @override
+  String get power => 'Potencia';
+
+  @override
+  String get torque => 'Torque';
+
+  @override
+  String get weight => 'Peso';
+
+  @override
+  String get fuelTank => 'Tanque de Combustible';
+
+  @override
+  String get transmission => 'Transmisión';
 }
