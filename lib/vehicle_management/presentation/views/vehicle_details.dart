@@ -14,7 +14,6 @@ class VehicleDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    // Note: Assuming BlocProvider is handled by parent or created here if needed
     context.read<VehicleBloc>().add(FetchVehicleByIdEvent(vehicleId: vehicleId));
 
     return Scaffold(
@@ -26,42 +25,95 @@ class VehicleDetailsPage extends StatelessWidget {
           }
 
           if (state is VehicleError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
           }
 
           if (state is VehicleLoaded) {
             final vehicle = state.vehicle;
+            final model = vehicle.model;
+
             return CustomScrollView(
               slivers: [
-                _buildSliverAppBar(vehicle),
+                SliverAppBar(
+                  expandedHeight: 240.0,
+                  pinned: true,
+                  backgroundColor: const Color(0xFFFF6B35),
+                  foregroundColor: Colors.white,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(
+                      "${model.brand} ${model.name}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
+                      ),
+                    ),
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          'assets/images/vehicle.png',
+                          fit: BoxFit.cover,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.7),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSectionHeader(localizations.vehicleInformation),
+                        _sectionTitle(localizations.vehicleInformation),
                         const SizedBox(height: 12),
-                        _buildInfoCard([
-                          _buildInfoRow(localizations.plate, vehicle.plate, Icons.tag),
-                          _buildInfoRow(localizations.year, vehicle.year, Icons.calendar_today),
-                          _buildInfoRow(localizations.modelYear, vehicle.model.modelYear, Icons.history),
-                          _buildInfoRow(localizations.type, vehicle.model.type, Icons.category),
-                        ]),
+                        _InfoCard(
+                          children: [
+                            _InfoRow(localizations.plate, vehicle.plate, Icons.tag),
+                            _InfoRow(localizations.year, vehicle.year, Icons.calendar_today),
+                            _InfoRow(localizations.modelYear, model.modelYear, Icons.history),
+                            _InfoRow(localizations.type, model.type, Icons.category),
+                          ],
+                        ),
 
                         const SizedBox(height: 24),
-                        _buildSectionHeader(localizations.technicalSpecifications),
+                        _sectionTitle(localizations.technicalSpecifications),
                         const SizedBox(height: 12),
-                        _buildInfoCard([
-                          _buildInfoRow(localizations.engine, vehicle.model.displacement, Icons.engineering),
-                          _buildInfoRow(localizations.power, vehicle.model.potency, Icons.speed),
-                          _buildInfoRow(localizations.torque, vehicle.model.engineTorque, Icons.settings_power),
-                          _buildInfoRow(localizations.weight, vehicle.model.weight, Icons.monitor_weight),
-                          _buildInfoRow(localizations.fuelTank, vehicle.model.tank, Icons.local_gas_station),
-                          _buildInfoRow(localizations.transmission, vehicle.model.transmission, Icons.settings),
-                        ]),
+                        _InfoCard(
+                          children: [
+                            _InfoRow(localizations.engine, model.displacement, Icons.engineering),
+                            _InfoRow(localizations.power, model.potency, Icons.speed),
+                            _InfoRow(localizations.torque, model.engineTorque, Icons.bolt),
+                            _InfoRow(localizations.weight, model.weight, Icons.monitor_weight),
+                            _InfoRow(localizations.fuelTank, model.tank, Icons.local_gas_station),
+                            _InfoRow(localizations.transmission, model.transmission, Icons.settings),
+                          ],
+                        ),
 
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 24),
+                        _sectionTitle("Additional Info"), // Ajustar con localizations si existe
+                        const SizedBox(height: 12),
+                        _InfoCard(
+                          children: [
+                            _InfoRow("Produced At", model.producedAt, Icons.public),
+                            _InfoRow("Price", model.price, Icons.attach_money),
+                            _InfoRow("Octane", model.octane, Icons.local_fire_department),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -75,61 +127,25 @@ class VehicleDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSliverAppBar(Vehicle vehicle) {
-    return SliverAppBar(
-      expandedHeight: 250.0,
-      pinned: true,
-      backgroundColor: const Color(0xFFFF6B35),
-      foregroundColor: Colors.white,
-      flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          '${vehicle.model.brand} ${vehicle.model.name}',
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
-          ),
-        ),
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(color: Colors.white),
-            Image.asset(
-              'assets/images/vehicle.png',
-              fit: BoxFit.contain,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.3),
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.6),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
+  Widget _sectionTitle(String title) {
     return Text(
       title,
       style: const TextStyle(
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.bold,
-        color: Color(0xFF333333),
+        color: Color(0xFF1A1A1A),
+        letterSpacing: 0.5,
       ),
     );
   }
+}
 
-  Widget _buildInfoCard(List<Widget> children) {
+class _InfoCard extends StatelessWidget {
+  final List<Widget> children;
+  const _InfoCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -137,21 +153,28 @@ class VehicleDetailsPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
+}
 
-  Widget _buildInfoRow(String label, String value, IconData icon) {
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+
+  const _InfoRow(this.label, this.value, this.icon);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           Container(
@@ -172,15 +195,15 @@ class VehicleDetailsPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   value,
                   style: const TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w600,
                     color: Colors.black87,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],

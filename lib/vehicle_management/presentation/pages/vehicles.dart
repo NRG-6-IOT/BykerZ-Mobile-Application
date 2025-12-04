@@ -9,6 +9,9 @@ import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehi
 import 'package:byker_z_mobile/vehicle_management/presentation/bloc/vehicle/vehicle_state.dart';
 import 'package:byker_z_mobile/vehicle_management/model/vehicle_model.dart';
 import 'package:byker_z_mobile/vehicle_management/services/vehicle_service.dart';
+import 'package:byker_z_mobile/vehicle_management/model/vehicle_create_request.dart';
+import '../../../notifications/presentation/views/notifications_view.dart';
+import '../../../vehicle_wellness/presentation/views/wellness_metrics_view.dart';
 import 'package:byker_z_mobile/l10n/app_localizations.dart';
 
 class Vehicles extends StatelessWidget {
@@ -165,20 +168,43 @@ class VehicleCard extends StatelessWidget {
                   Positioned(
                     top: 12,
                     right: 12,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        vehicle.model.type,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            vehicle.model.type,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 8),
+                        // Notification Button
+                        Material(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          elevation: 2,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () => _navigateToNotifications(context, vehicle.id),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: const Icon(
+                                Icons.notifications_none_rounded,
+                                color: Color(0xFFFF6B35),
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -189,6 +215,7 @@ class VehicleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Title and Year
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -199,6 +226,7 @@ class VehicleCard extends StatelessWidget {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF1A1A1A),
+                              height: 1.2,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -222,6 +250,8 @@ class VehicleCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
+
+                    // Plate
                     Row(
                       children: [
                         Icon(Icons.credit_card_rounded, size: 16, color: Colors.grey.shade500),
@@ -235,25 +265,47 @@ class VehicleCard extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 16),
                     const Divider(height: 1, color: Color(0xFFEEEEEE)),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
+
+                    // Actions Row
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          localizations.viewDetails,
-                          style: const TextStyle(
-                            color: Color(0xFFFF6B35),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                        // Metrics Button
+                        ElevatedButton.icon(
+                          onPressed: () => _navigateToWellnessMetrics(context, vehicle.id),
+                          icon: const Icon(Icons.bar_chart_rounded, size: 18),
+                          label: Text(localizations.metrics ?? 'Metrics', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF6B35),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 0,
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 16,
-                          color: Color(0xFFFF6B35),
+
+                        // View Details
+                        Row(
+                          children: [
+                            Text(
+                              localizations.viewDetails,
+                              style: const TextStyle(
+                                color: Color(0xFFFF6B35),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 18,
+                              color: Color(0xFFFF6B35),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -263,6 +315,56 @@ class VehicleCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _navigateToWellnessMetrics(BuildContext context, int vehicleId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => WellnessMetricsScreen(vehicleId: vehicleId),
+      ),
+    );
+  }
+
+  void _navigateToNotifications(BuildContext context, int vehicleId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NotificationsView(specificVehicleId: vehicleId),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black54,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
