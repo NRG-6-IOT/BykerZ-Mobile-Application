@@ -1,37 +1,48 @@
-// presentation/widgets/detail_row.dart
 import 'package:flutter/material.dart';
 
 class DetailRow extends StatelessWidget {
   final String label;
   final String value;
+  final IconData? icon; // Opción para icono
 
   const DetailRow({
     super.key,
     required this.label,
     required this.value,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (icon != null) ...[
+            Icon(icon, size: 16, color: Colors.grey.shade400),
+            const SizedBox(width: 8),
+          ],
           SizedBox(
-            width: 120,
+            width: 130,
             child: Text(
-              '$label:',
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade600,
+                fontSize: 13,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontWeight: FontWeight.normal),
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1A1A1A), // Negro suave
+                fontSize: 14,
+              ),
             ),
           ),
         ],

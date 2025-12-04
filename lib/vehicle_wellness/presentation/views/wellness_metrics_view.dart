@@ -1,10 +1,8 @@
-// presentation/views/wellness_metrics_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../shared/presentation/widgets/app_drawer.dart';
 import '../statemanagement/bloc/wellness_metric_bloc.dart';
 import '../widgets/wellness_metric_list.dart';
-
 
 class WellnessMetricsScreen extends StatelessWidget {
   final int vehicleId;
@@ -13,7 +11,6 @@ class WellnessMetricsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Disparar la carga automáticamente cuando se construye el widget
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<WellnessMetricBloc>().add(
         LoadWellnessMetricsByVehicleIdEvent(vehicleId),
@@ -21,16 +18,24 @@ class WellnessMetricsScreen extends StatelessWidget {
     });
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: Text('Metrics for Vehicle $vehicleId'),
+        title: Text(
+          'Vehicle Metrics',
+          style: const TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.5),
+        ),
+        centerTitle: true,
         backgroundColor: const Color(0xFFFF6B35),
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: BlocBuilder<WellnessMetricBloc, WellnessMetricState>(
         builder: (context, state) {
           if (state is WellnessMetricsLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFFFF6B35)),
+            );
           }
 
           if (state is WellnessMetricsError) {
@@ -38,15 +43,26 @@ class WellnessMetricsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Error: ${state.errorMessage}'),
+                  Icon(Icons.error_outline_rounded, size: 60, color: Colors.red.shade300),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  Text(
+                    'Error loading metrics',
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
                     onPressed: () {
                       context.read<WellnessMetricBloc>().add(
                         LoadWellnessMetricsByVehicleIdEvent(vehicleId),
                       );
                     },
-                    child: const Text('Try again'),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Try Again'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF6B35),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                 ],
               ),
@@ -54,33 +70,37 @@ class WellnessMetricsScreen extends StatelessWidget {
           }
 
           if (state is WellnessMetricsEmpty) {
-            return const Center(
-              child: Text('There are no vehicle_wellness for this vehicle'),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.bar_chart_rounded, size: 48, color: Colors.grey.shade400),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'No metrics available yet',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 
           if (state is WellnessMetricsLoaded) {
-            return WellnessMetricList(metrics: state.metrics); // ✅ Usa widget separado
+            return WellnessMetricList(metrics: state.metrics);
           }
 
-          // Estado inicial - cargar automáticamente
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Loading vehicle_wellness...'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<WellnessMetricBloc>().add(
-                      LoadWellnessMetricsByVehicleIdEvent(vehicleId),
-                    );
-                  },
-                  child: const Text('Load vehicle_wellness'),
-                ),
-              ],
-            ),
-          );
+          return const SizedBox.shrink();
         },
       ),
     );
