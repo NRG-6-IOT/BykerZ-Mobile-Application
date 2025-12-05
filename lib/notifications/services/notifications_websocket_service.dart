@@ -21,7 +21,7 @@ class NotificationWebSocketService {
 
       
 
-      // Cerrar conexión anterior si existe
+      
       await disconnect();
 
       
@@ -32,7 +32,7 @@ class NotificationWebSocketService {
       _isConnected = true;
       
 
-      // Escuchar mensajes DIRECTAMENTE - sin procesar frames STOMP
+      
       _channel!.stream.listen(
             (message) {
           _handleMessage(message);
@@ -65,7 +65,7 @@ class NotificationWebSocketService {
       
       _notificationController.add(notification);
 
-      print('📨 Nueva alerta para vehículo: ${notification.title}');
+      
     } catch (e) {
       print('Error procesando mensaje: $e');
       print('Mensaje problemático: $message');
