@@ -46,7 +46,7 @@ class WellnessMetricsEmpty extends WellnessMetricState  {
   const WellnessMetricsEmpty();
 }
 
-// ✏️ ESTADOS ESPECIFICOS PARA ACCIONES DE ESCRITURA
+
 class CreateWellnessMetricInProgress extends WellnessMetricState {
   const CreateWellnessMetricInProgress();
 }
