@@ -12,7 +12,7 @@ class WellnessMetricModel {
   final double temperatureCelsius;
   final double pressureHpa;
   final bool impactDetected;
-  final DateTime? registeredAt; // Opcional en el modelo
+  final DateTime? registeredAt;
 
   WellnessMetricModel({
     required this.id,
@@ -78,7 +78,6 @@ class WellnessMetricModel {
     return impactDetected;
   }
 
-  //Nuevas
   Map<String, dynamic> toJson() {
     return {
       'id': id,

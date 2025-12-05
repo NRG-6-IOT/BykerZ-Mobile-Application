@@ -1,4 +1,3 @@
-// services/notification_websocket_service.dart
 import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -22,10 +21,8 @@ class NotificationWebSocketService {
       print('🔑 Token: ${token != null ? "✅" : "❌"}');
       print('🚗 Conectando a alertas del vehículo: $vehicleId');
 
-      // Cerrar conexión anterior si existe
       await disconnect();
 
-      // producción en Render:
       _channel = WebSocketChannel.connect(
         Uri.parse('wss://bykerz-backend.onrender.com/ws-wellness'),
 
@@ -34,7 +31,6 @@ class NotificationWebSocketService {
       _isConnected = true;
       print('✅ WebSocket conectado para vehículo $vehicleId');
 
-      // Escuchar mensajes DIRECTAMENTE - sin procesar frames STOMP
       _channel!.stream.listen(
             (message) {
           _handleMessage(message);
@@ -60,12 +56,9 @@ class NotificationWebSocketService {
 
   void _handleMessage(dynamic message) {
     try {
-      // ✅ ASUNCIÓN: El backend ya envía el JSON directamente
-      // sin frames STOMP complicados
       final jsonData = jsonDecode(message);
       final notification = NotificationModel.fromJson(jsonData);
 
-      // Emitir notificación al stream
       _notificationController.add(notification);
 
       print('📨 Nueva alerta para vehículo: ${notification.title}');

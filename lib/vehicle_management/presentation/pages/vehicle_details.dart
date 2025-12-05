@@ -104,7 +104,7 @@ class VehicleDetailsPage extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 24),
-                        _sectionTitle("Additional Info"), // Ajustar con localizations si existe
+                        _sectionTitle("Additional Info"),
                         const SizedBox(height: 12),
                         _InfoCard(
                           children: [

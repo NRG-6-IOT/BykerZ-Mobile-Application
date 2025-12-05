@@ -1,4 +1,3 @@
-// presentation/views/wellness_metrics_screen.dart
 import 'package:byker_z_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +15,6 @@ class WellnessMetricsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    // Disparar la carga automáticamente cuando se construye el widget
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<WellnessMetricBloc>().add(
         LoadWellnessMetricsByVehicleIdEvent(vehicleId),
@@ -66,7 +64,6 @@ class WellnessMetricsScreen extends StatelessWidget {
             return WellnessMetricList(metrics: state.metrics);
           }
 
-          // Estado inicial - cargar automáticamente
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

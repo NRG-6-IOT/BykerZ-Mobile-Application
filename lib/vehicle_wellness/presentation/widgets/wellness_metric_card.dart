@@ -1,4 +1,3 @@
-// presentation/widgets/wellness_metric_card.dart
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../domain/entities/wellness_metric.dart';
@@ -20,7 +19,6 @@ class WellnessMetricCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header con ID y estado
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -36,19 +34,16 @@ class WellnessMetricCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // Información de ubicación
             DetailRow(
               label: l10n.location,
               value: '${metric.latitude.toStringAsFixed(4)}, ${metric.longitude.toStringAsFixed(4)}',
             ),
 
-            // Calidad del aire
             DetailRow(
               label: l10n.airQuality,
               value: '${l10n.co2}: ${metric.CO2Ppm}${l10n.ppm} | ${l10n.nh3}: ${metric.NH3Ppm}${l10n.ppm} | ${l10n.benzene}: ${metric.BenzenePpm}${l10n.ppm}',
             ),
 
-            // Presión atmosférica
             DetailRow(
               label: l10n.pressure,
               value: '${metric.pressureHpa} ${l10n.hPa}',

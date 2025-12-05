@@ -90,7 +90,6 @@ class VehicleCreateDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // Plate
                   _buildInputLabel(localizations.plateFormat),
                   _buildTextField(
                     hint: "e.g. 1234-XY",
@@ -107,7 +106,6 @@ class VehicleCreateDialog extends StatelessWidget {
                     ),
                   const SizedBox(height: 16),
 
-                  // Year
                   _buildInputLabel(localizations.year),
                   _buildDropdown<String>(
                     hint: localizations.year,
@@ -117,7 +115,6 @@ class VehicleCreateDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // Brand
                   _buildInputLabel(localizations.brand),
                   _buildDropdown<String>(
                     hint: localizations.brand,
@@ -127,7 +124,6 @@ class VehicleCreateDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // Model
                   _buildInputLabel(localizations.model),
                   _buildDropdown<Model>(
                     hint: localizations.model,
@@ -138,7 +134,6 @@ class VehicleCreateDialog extends StatelessWidget {
 
                   const SizedBox(height: 32),
 
-                  // Actions
                   Row(
                     children: [
                       Expanded(

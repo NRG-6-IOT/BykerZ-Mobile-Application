@@ -1,16 +1,13 @@
-// presentation/bloc/wellness_metric_state.dart
 part of 'wellness_metric_bloc.dart';
 
 abstract class WellnessMetricState {
   const WellnessMetricState ();
 }
 
-// ESTADO INICIAL - Cuando se abre la pantalla por primera vez
 class WellnessMetricInitial extends WellnessMetricState {
   const WellnessMetricInitial();
 }
 
-// ESTADO DE CARGA - Cuando se están cargando las métricas
 class WellnessMetricLoading extends WellnessMetricState  {
   const WellnessMetricLoading();
 }
@@ -19,7 +16,6 @@ class WellnessMetricsLoading extends WellnessMetricState {
   const WellnessMetricsLoading();
 }
 
-// ESTADO DE ERROR - Cuando ocurre un error al cargar las métricas
 class WellnessMetricsError extends WellnessMetricState {
   final String errorMessage;
   const WellnessMetricsError({required this.errorMessage});
@@ -30,7 +26,6 @@ class WellnessMetricError extends WellnessMetricState  {
   const WellnessMetricError({required this.errorMessage});
 }
 
-// ESTADO DE CARGA EXITOSA - Cuando las métricas se cargan correctamente
 class WellnessMetricLoaded extends WellnessMetricState  {
   final WellnessMetric metric;
   const WellnessMetricLoaded({required this.metric});
@@ -41,12 +36,10 @@ class WellnessMetricsLoaded extends WellnessMetricState {
   const WellnessMetricsLoaded({required this.metrics});
 }
 
-// ESTADO DE LISTA VACÍA - Cuando no hay métricas para mostrar
 class WellnessMetricsEmpty extends WellnessMetricState  {
   const WellnessMetricsEmpty();
 }
 
-// ✏️ ESTADOS ESPECIFICOS PARA ACCIONES DE ESCRITURA
 class CreateWellnessMetricInProgress extends WellnessMetricState {
   const CreateWellnessMetricInProgress();
 }

@@ -1,4 +1,3 @@
-// widgets/notification_card.dart
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -30,7 +29,6 @@ class NotificationCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header con título y badge de severidad
               Row(
                 children: [
                   Expanded(
@@ -49,7 +47,6 @@ class NotificationCard extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // Mensaje
               Text(
                 '${l10n.message}: ${notification.message}',
                 style: TextStyle(
@@ -61,7 +58,6 @@ class NotificationCard extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // Footer con información
               Row(
                 children: [
                   _buildTypeChip(notification.type),
@@ -76,7 +72,6 @@ class NotificationCard extends StatelessWidget {
                 ],
               ),
 
-              // Botón marcar como leído si no está leída
               if (!notification.read && onMarkAsRead != null) ...[
                 const SizedBox(height: 12),
                 Align(

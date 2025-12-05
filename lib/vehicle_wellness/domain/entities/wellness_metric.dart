@@ -25,8 +25,4 @@ class WellnessMetric {
     required this.impactDetected,
     required this.registeredAt,
   });
-
-  //Reglas de negocio pueden ser añadidas aquí
-
-  //Logica centralizada con todas las reglas de negocio
 }

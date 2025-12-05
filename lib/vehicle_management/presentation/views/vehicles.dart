@@ -147,7 +147,6 @@ class VehicleCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Header
               Stack(
                 children: [
                   ClipRRect(
@@ -186,7 +185,6 @@ class VehicleCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        // Notification Button
                         Material(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -215,7 +213,6 @@ class VehicleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title and Year
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -251,7 +248,6 @@ class VehicleCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
 
-                    // Plate
                     Row(
                       children: [
                         Icon(Icons.credit_card_rounded, size: 16, color: Colors.grey.shade500),
@@ -270,11 +266,9 @@ class VehicleCard extends StatelessWidget {
                     const Divider(height: 1, color: Color(0xFFEEEEEE)),
                     const SizedBox(height: 16),
 
-                    // Actions Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Metrics Button
                         ElevatedButton.icon(
                           onPressed: () => _navigateToWellnessMetrics(context, vehicle.id),
                           icon: const Icon(Icons.bar_chart_rounded, size: 18),
@@ -288,7 +282,6 @@ class VehicleCard extends StatelessWidget {
                           ),
                         ),
 
-                        // View Details
                         Row(
                           children: [
                             Text(

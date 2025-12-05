@@ -1,4 +1,3 @@
-// services/notification_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../shared/client/api.client.dart';
@@ -11,7 +10,6 @@ class NotificationService {
 
   final String basePath = 'notifications';
 
-  // ✅ MÉTODO PARA HEADERS COMUNES
   Future<Map<String, String>> _getHeaders() async {
     final token = await TokenService.getToken();
     return {
@@ -20,7 +18,6 @@ class NotificationService {
     };
   }
 
-  // ✅ GET ALL NOTIFICATIONS - GET /api/v1/notifications
   Future<List<NotificationModel>> getAllNotifications() async {
     print('🔍 [SERVICE] Getting all notifications');
 
@@ -39,7 +36,6 @@ class NotificationService {
     }
   }
 
-  // ✅ GET NOTIFICATION BY ID - GET /api/v1/notifications/{id}
   Future<NotificationModel> getNotificationById(int notificationId) async {
     print('🔍 [SERVICE] Getting notification by ID: $notificationId');
 
@@ -60,7 +56,6 @@ class NotificationService {
     }
   }
 
-  // ✅ GET NOTIFICATIONS BY VEHICLE ID - GET /api/v1/notifications/vehicle/{vehicleId}
   Future<List<NotificationModel>> getNotificationsByVehicleId(int vehicleId) async {
     print('🔍 [SERVICE] Getting notifications for vehicle: $vehicleId');
 
@@ -74,7 +69,6 @@ class NotificationService {
       print('✅ [SERVICE] Retrieved ${jsonList.length} notifications for vehicle $vehicleId');
       return jsonList.map((json) => NotificationModel.fromJson(json)).toList();
     } else if (response.statusCode == 404) {
-      // ✅ Retornar lista vacía como en tu backend
       print('ℹ️ [SERVICE] No notifications found for vehicle $vehicleId');
       return [];
     } else {
@@ -83,7 +77,6 @@ class NotificationService {
     }
   }
 
-  // ✅ MARK NOTIFICATION AS READ - PUT /api/v1/notifications/{id}/read
   Future<NotificationModel> markNotificationAsRead(int notificationId) async {
     print('🔍 [SERVICE] Marking notification $notificationId as read');
 
@@ -101,7 +94,6 @@ class NotificationService {
     }
   }
 
-  // ✅ CREATE NOTIFICATION - POST /api/v1/notifications
   Future<NotificationModel> createNotification({
     required int vehicleId,
     required String title,

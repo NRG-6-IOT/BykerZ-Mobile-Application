@@ -44,7 +44,6 @@ class NotificationModel {
   }) {
     return NotificationModel(
       id: id ?? this.id,
-      //"Para el campo ID: si me pasaste un ID nuevo, úsalo; si no me pasaste nada, quédate con el ID que ya tengo."
       vehicleId: vehicleId ?? this.vehicleId,
       title: title ?? this.title,
       message: message ?? this.message,

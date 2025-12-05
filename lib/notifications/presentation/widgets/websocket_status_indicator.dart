@@ -1,4 +1,3 @@
-// widgets/websocket_status_indicator.dart
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';

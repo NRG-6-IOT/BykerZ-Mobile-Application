@@ -1,4 +1,3 @@
-// views/notifications_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../l10n/app_localizations.dart';
@@ -116,7 +115,6 @@ class _NotificationsViewState extends State<NotificationsView> {
       ),
       body: BlocListener<NotificationsBloc, NotificationsState>(
         listener: (context, state) {
-          // Mostrar snackbar cuando llega una nueva notificación en tiempo real
           if (state is NewNotificationReceived) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -135,7 +133,6 @@ class _NotificationsViewState extends State<NotificationsView> {
         },
         child: Column(
           children: [
-            // Indicador de estado WebSocket
             BlocBuilder<NotificationsBloc, NotificationsState>(
               builder: (context, state) {
                 final isConnected = context.read<NotificationsBloc>().isWebSocketConnected;
@@ -148,7 +145,6 @@ class _NotificationsViewState extends State<NotificationsView> {
               },
             ),
 
-            // Lista de notificaciones
             Expanded(
               child: BlocBuilder<NotificationsBloc, NotificationsState>(
                 builder: (context, state) {
@@ -239,7 +235,6 @@ class _NotificationsViewState extends State<NotificationsView> {
     }
 
     if (state is WebSocketError) {
-      // Mostrar error pero mantener la lista si existe
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -249,7 +244,6 @@ class _NotificationsViewState extends State<NotificationsView> {
         );
       });
 
-      // Volver a cargar el contenido principal
       return _buildPreviousContent();
     }
 
@@ -257,10 +251,8 @@ class _NotificationsViewState extends State<NotificationsView> {
   }
 
   Widget _buildPreviousContent() {
-    // Buscar el último estado válido con notificaciones
     final bloc = context.read<NotificationsBloc>();
 
-    // Esto es una simplificación - en una app real podrías guardar el último estado
     return BlocBuilder<NotificationsBloc, NotificationsState>(
       builder: (context, state) {
         if (state is AllNotificationsLoaded || state is NotificationsByVehicleIdLoaded) {
@@ -303,7 +295,6 @@ class _NotificationsViewState extends State<NotificationsView> {
 
   @override
   void dispose() {
-    // Desconectar WebSocket si esta vista era específica de un vehículo
     if (widget.specificVehicleId != null) {
       context.read<NotificationsBloc>().add(DisconnectWebSocketEvent());
     }

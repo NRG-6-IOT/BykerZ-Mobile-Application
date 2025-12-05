@@ -1,4 +1,3 @@
-// data/data_sources/wellness_metric_data_source.dart
 import 'dart:convert';
 import 'package:byker_z_mobile/shared/client/api.client.dart';
 import 'package:byker_z_mobile/vehicle_wellness/data/datasource/token_datasource.dart';
@@ -11,7 +10,6 @@ class WellnessMetricDataSource {
   //final String baseUrl= 'https://backend-web-services-1.onrender.com/api/v1/' ;
   final String basePath = 'metrics';
 
-  // ✅ MÉTODO PARA OBTENER TOKEN (similar a tu TokenService)
   Future<String?> _getToken() async {
     try {
       return await TokenDataSource.getToken();
@@ -21,7 +19,6 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ MÉTODO PARA HEADERS COMUNES
   Future<Map<String, String>> _getHeaders() async {
     final token = await _getToken();
     return {
@@ -30,7 +27,6 @@ class WellnessMetricDataSource {
     };
   }
 
-  // ✅ CREATE - POST /api/v1/vehicle_wellness
   Future<WellnessMetricModel> createWellnessMetric(WellnessMetricModel metric) async {
     final response = await http.post(
       Uri.parse('$baseUrl$basePath'),
@@ -45,7 +41,6 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ UPDATE - PUT /api/v1/vehicle_wellness/{id}
   Future<WellnessMetricModel> updateWellnessMetric(int id, WellnessMetricModel metric) async {
     final response = await http.put(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -60,7 +55,6 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ DELETE - DELETE /api/v1/vehicle_wellness/{id}
   Future<void> deleteWellnessMetric(int id) async {
     final response = await http.delete(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -72,7 +66,6 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET BY ID - GET /api/v1/vehicle_wellness/{id}
   Future<WellnessMetricModel> getWellnessMetricById(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -86,7 +79,6 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET ALL - GET /api/v1/vehicle_wellness
   Future<List<WellnessMetricModel>> getAllWellnessMetrics() async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath'),
@@ -101,8 +93,6 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET BY VEHICLE ID - GET /api/v1/vehicle_wellness/vehicle/{vehicleId}
-  // data/data_sources/wellness_metric_data_source.dart
   Future<List<WellnessMetricModel>> getWellnessMetricsByVehicleId(int vehicleId) async {
     print('🔍 [DEBUG] Getting wellness metrics for vehicle: $vehicleId');
 

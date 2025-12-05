@@ -2,7 +2,6 @@ part of 'notifications_bloc.dart';
 
 abstract class NotificationsState {}
 
-// 🔄 ESTADOS DE CARGA
 class NotificationsInitial extends NotificationsState {}
 
 class NotificationsLoading extends NotificationsState {}
@@ -15,7 +14,6 @@ class NotificationMarkingAsRead extends NotificationsState {
   NotificationMarkingAsRead(this.notificationId);
 }
 
-// ✅ ESTADOS DE ÉXITO (LECTURA)
 class AllNotificationsLoaded extends NotificationsState {
   final List<NotificationModel> notifications;
 
@@ -38,7 +36,6 @@ class NotificationsByVehicleIdLoaded extends NotificationsState {
   });
 }
 
-// ✅ ESTADOS DE ÉXITO (ESCRITURA)
 class NotificationCreated extends NotificationsState {
   final NotificationModel notification;
 
@@ -51,7 +48,6 @@ class NotificationMarkedAsRead extends NotificationsState {
   NotificationMarkedAsRead({required this.notification});
 }
 
-// 🔗 ESTADOS DE WEBSOCKET
 class WebSocketConnecting extends NotificationsState {
   final int vehicleId;
 
@@ -66,21 +62,18 @@ class WebSocketConnected extends NotificationsState {
 
 class WebSocketDisconnected extends NotificationsState {}
 
-// 📨 ESTADO PARA NOTIFICACIONES EN TIEMPO REAL
 class NewNotificationReceived extends NotificationsState {
   final NotificationModel notification;
 
   NewNotificationReceived({required this.notification});
 }
 
-// ⚠️ ESTADOS DE INFORMACIÓN
 class NotificationsEmpty extends NotificationsState {
   final String message;
 
   NotificationsEmpty({this.message = "There are no notifications available."});
 }
 
-// ❌ ESTADOS DE ERROR
 class NotificationsError extends NotificationsState {
   final String errorMessage;
 

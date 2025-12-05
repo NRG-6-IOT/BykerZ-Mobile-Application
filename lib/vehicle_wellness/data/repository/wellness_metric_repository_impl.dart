@@ -9,7 +9,6 @@ class WellnessMetricRepositoryImpl implements WellnessMetricRepository {
 
   WellnessMetricRepositoryImpl({required this.dataSource});
 
-  // ✅ OPERACIONES DE ESCRITURA
   @override
   Future<WellnessMetric> createWellnessMetric(WellnessMetric metric) async {
     final model = WellnessMetricModel.fromEntity(metric);
@@ -29,7 +28,6 @@ class WellnessMetricRepositoryImpl implements WellnessMetricRepository {
     await dataSource.deleteWellnessMetric(id);
   }
 
-  // ✅ OPERACIONES DE LECTURA
   @override
   Future<WellnessMetric> getWellnessMetricById(int id) async {
     final model = await dataSource.getWellnessMetricById(id);
