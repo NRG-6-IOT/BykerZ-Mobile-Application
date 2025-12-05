@@ -8,10 +8,10 @@ class UpdateWellnessMetricUseCase {
   UpdateWellnessMetricUseCase(this.repository);
 
   Future<WellnessMetric> call(int wellnessMetricId, WellnessMetric metric) {
-    // ✅ VALIDACIONES ESPECÍFICAS DE UPDATE
+    
     _validateWellnessMetricId(wellnessMetricId);
 
-    // ✅ REUTILIZAMOS LAS MISMAS VALIDACIONES DE CREATE
+    
     _validateVehicleId(metric.vehicleId);
     _validateCoordinates(metric.latitude, metric.longitude);
     _validateAirQuality(metric.CO2Ppm, metric.NH3Ppm, metric.BenzenePpm);
@@ -19,18 +19,18 @@ class UpdateWellnessMetricUseCase {
     _validateAtmosphericPressure(metric.pressureHpa);
     _validateStatusImpact(metric.impactDetected);
 
-    // Si pasa todas las validaciones, actualizar la métrica
+    
     return repository.updateWellnessMetric(wellnessMetricId, metric);
   }
 
-  // ✅ VALIDACIÓN ESPECÍFICA: WellnessMetricId (de UpdateWellnessMetricCommand)
+  
   void _validateWellnessMetricId(int wellnessMetricId) {
     if (wellnessMetricId <= 0) {
       throw ArgumentError('Wellness Metric ID must be a positive non-zero value');
     }
   }
 
-  // ✅ REUTILIZAMOS LAS VALIDACIONES DE CREATE
+  
   void _validateVehicleId(int vehicleId) {
     if (vehicleId <= 0) {
       throw ArgumentError('vehicleId cannot be less than or equal to zero');
