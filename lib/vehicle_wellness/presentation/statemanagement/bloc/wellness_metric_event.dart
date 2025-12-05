@@ -6,7 +6,7 @@ part of 'wellness_metric_bloc.dart';
 
 abstract class WellnessMetricEvent {}
 
-// 📖 EVENTOS DE LECTURA (Queries)
+
 
 class LoadWellnessMetricByIdEvent extends WellnessMetricEvent  {
   final int wellnessMetricId;
@@ -18,7 +18,7 @@ class LoadWellnessMetricsByVehicleIdEvent extends WellnessMetricEvent  {
   LoadWellnessMetricsByVehicleIdEvent(this.vehicleId);
 }
 
-// ✏️ EVENTOS DE ESCRITURA (Commands)
+
 class CreateWellnessMetricEvent extends WellnessMetricEvent  {
   final WellnessMetric metric;
   CreateWellnessMetricEvent(this.metric);
