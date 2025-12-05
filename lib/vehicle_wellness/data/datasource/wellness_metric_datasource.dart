@@ -11,7 +11,7 @@ class WellnessMetricDataSource {
   //final String baseUrl= 'https://backend-web-services-1.onrender.com/api/v1/' ;
   final String basePath = 'metrics';
 
-  // ✅ MÉTODO PARA OBTENER TOKEN (similar a tu TokenService)
+  
   Future<String?> _getToken() async {
     try {
       return await TokenDataSource.getToken();
@@ -21,7 +21,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ MÉTODO PARA HEADERS COMUNES
+  
   Future<Map<String, String>> _getHeaders() async {
     final token = await _getToken();
     return {
@@ -30,7 +30,7 @@ class WellnessMetricDataSource {
     };
   }
 
-  // ✅ CREATE - POST /api/v1/vehicle_wellness
+  
   Future<WellnessMetricModel> createWellnessMetric(WellnessMetricModel metric) async {
     final response = await http.post(
       Uri.parse('$baseUrl$basePath'),
@@ -45,7 +45,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ UPDATE - PUT /api/v1/vehicle_wellness/{id}
+  
   Future<WellnessMetricModel> updateWellnessMetric(int id, WellnessMetricModel metric) async {
     final response = await http.put(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -60,7 +60,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ DELETE - DELETE /api/v1/vehicle_wellness/{id}
+  
   Future<void> deleteWellnessMetric(int id) async {
     final response = await http.delete(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -72,7 +72,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET BY ID - GET /api/v1/vehicle_wellness/{id}
+  
   Future<WellnessMetricModel> getWellnessMetricById(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath/$id'),
@@ -86,7 +86,7 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET ALL - GET /api/v1/vehicle_wellness
+  
   Future<List<WellnessMetricModel>> getAllWellnessMetrics() async {
     final response = await http.get(
       Uri.parse('$baseUrl$basePath'),
@@ -101,34 +101,33 @@ class WellnessMetricDataSource {
     }
   }
 
-  // ✅ GET BY VEHICLE ID - GET /api/v1/vehicle_wellness/vehicle/{vehicleId}
-  // data/data_sources/wellness_metric_data_source.dart
+  
   Future<List<WellnessMetricModel>> getWellnessMetricsByVehicleId(int vehicleId) async {
-    print('🔍 [DEBUG] Getting wellness metrics for vehicle: $vehicleId');
+    print('[DEBUG] Getting wellness metrics for vehicle: $vehicleId');
 
     final headers = await _getHeaders();
-    print('🔍 [DEBUG] Headers: $headers');
+    print('[DEBUG] Headers: $headers');
 
     final url = '$baseUrl$basePath/vehicle/$vehicleId';
-    print('🔍 [DEBUG] URL: $url');
+    print('[DEBUG] URL: $url');
 
     final response = await http.get(
       Uri.parse(url),
       headers: headers,
     );
 
-    print('🔍 [DEBUG] Response status: ${response.statusCode}');
-    print('🔍 [DEBUG] Response body: ${response.body}');
+    print('[DEBUG] Response status: ${response.statusCode}');
+    print('[DEBUG] Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = json.decode(response.body);
-      print('🔍 [DEBUG] Parsed ${jsonList.length} metrics');
+      print('[DEBUG] Parsed ${jsonList.length} metrics');
       return jsonList.map((json) => WellnessMetricModel.fromJson(json)).toList();
     } else if (response.statusCode == 404) {
-      print('🔍 [DEBUG] No metrics found (404)');
+      print('[DEBUG] No metrics found (404)');
       return [];
     } else {
-      print('❌ [DEBUG] Error: ${response.statusCode} - ${response.body}');
+      print('[DEBUG] Error: ${response.statusCode} - ${response.body}');
       throw Exception('Error fetching vehicle metrics: ${response.statusCode} - ${response.body}');
     }
   }
