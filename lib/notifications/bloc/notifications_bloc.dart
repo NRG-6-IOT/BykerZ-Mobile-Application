@@ -22,22 +22,22 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         _webSocketService = webSocketService,
         super(NotificationsInitial()) {
 
-    // 📖 EVENTOS DE LECTURA
+    
     on<LoadAllNotificationsEvent>(_onLoadAllNotifications);
     on<LoadNotificationByIdEvent>(_onLoadNotificationById);
     on<LoadNotificationsByVehicleIdEvent>(_onLoadNotificationsByVehicleId);
 
-    // ✏️ EVENTOS DE ESCRITURA
+    
     on<MarkNotificationAsReadEvent>(_onMarkNotificationAsRead);
     on<CreateNotificationEvent>(_onCreateNotification);
 
-    // 🔗 EVENTOS DE WEBSOCKET
+    
     on<ConnectWebSocketEvent>(_onConnectWebSocket);
     on<DisconnectWebSocketEvent>(_onDisconnectWebSocket);
     on<NewNotificationReceivedEvent>(_onNewNotificationReceived);
   }
 
-  // 📖 HANDLERS DE LECTURA
+  
 
   Future<void> _onLoadAllNotifications(
       LoadAllNotificationsEvent event,
@@ -94,7 +94,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     }
   }
 
-  // ✏️ HANDLERS DE ESCRITURA
+  
 
   Future<void> _onMarkNotificationAsRead(
       MarkNotificationAsReadEvent event,
@@ -105,12 +105,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     try {
       final updatedNotification = await _notificationService.markNotificationAsRead(event.notificationId);
 
-      // ✅ ACTUALIZAR LA LISTA INMEDIATAMENTE después de marcar como leída
+      
       _updateNotificationsList(emit, updatedNotification);
 
       emit(NotificationMarkedAsRead(notification: updatedNotification));
 
-      // ✅ RECARGAR LAS NOTIFICACIONES DESPUÉS DE UN PEQUEÑO DELAY
+      
       Future.delayed(const Duration(milliseconds: 500), () {
         if (_currentVehicleId != null) {
           add(LoadNotificationsByVehicleIdEvent(_currentVehicleId!));
@@ -139,7 +139,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         severity: event.severity,
       );
 
-      // Actualizar la lista si estamos en un estado cargado
+      
       _updateNotificationsList(emit, createdNotification, addToBeginning: true);
 
       emit(NotificationCreated(notification: createdNotification));
@@ -148,7 +148,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     }
   }
 
-  // 🔗 HANDLERS DE WEBSOCKET
+  
 
   Future<void> _onConnectWebSocket(
       ConnectWebSocketEvent event,
@@ -157,13 +157,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     emit(WebSocketConnecting(vehicleId: event.vehicleId));
 
     try {
-      // Conectar al WebSocket
+      
       _webSocketService.connectToVehicleAlerts(event.vehicleId);
 
-      // Suscribirse al stream del WebSocket service
+      
       _webSocketSubscription = _webSocketService.notificationStream.listen(
             (notification) {
-          // Cuando llega una nueva notificación, disparar evento
+          
           add(NewNotificationReceivedEvent(notification));
         },
         onError: (error) {
@@ -197,21 +197,21 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       ) async {
     print('📨 [BLOC] Nueva notificación recibida: ${event.notification.title}');
 
-    // Emitir estado para mostrar la notificación en tiempo real
+    
     emit(NewNotificationReceived(notification: event.notification));
 
-    // Actualizar la lista de notificaciones automáticamente
+    
     _updateNotificationsList(emit, event.notification, addToBeginning: true);
   }
 
-  // 🔄 MÉTODO AUXILIAR PARA ACTUALIZAR LISTAS
+  
 
   void _updateNotificationsList(
       Emitter<NotificationsState> emit,
       NotificationModel updatedNotification, {
         bool addToBeginning = false,
       }) {
-    // Si estamos en un estado con lista de notificaciones, actualizarla
+    
     if (state is AllNotificationsLoaded) {
       final currentState = state as AllNotificationsLoaded;
       final updatedNotifications = currentState.notifications.map((n) {
@@ -233,13 +233,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     }
   }
 
-  // 🔍 MÉTODOS PÚBLICOS ÚTILES
+  
 
   int? get currentVehicleId => _currentVehicleId;
 
   bool get isWebSocketConnected => _webSocketService.isConnected;
 
-  // 🧹 CLEANUP
+  
 
   @override
   Future<void> close() {
