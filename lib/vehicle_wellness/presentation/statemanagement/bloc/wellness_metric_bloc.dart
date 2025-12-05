@@ -8,8 +8,8 @@ import '../../../domain/usecases/GetWellnessMetricByIdUseCase.dart';
 import '../../../domain/usecases/GetWellnessMetricsByVehicleIdUseCase.dart';
 import '../../../domain/usecases/UpdateWellnessMetricUseCase.dart';
 
-part 'wellness_metric_event.dart';    // ✅ "metric" singular
-part 'wellness_metric_state.dart';    // ✅ "metric" singular
+part 'wellness_metric_event.dart';    
+part 'wellness_metric_state.dart';    
 
 class WellnessMetricBloc  extends Bloc<WellnessMetricEvent, WellnessMetricState> {
 
@@ -33,11 +33,11 @@ class WellnessMetricBloc  extends Bloc<WellnessMetricEvent, WellnessMetricState>
   // _webSocketService = webSocketService,
         super(const WellnessMetricInitial()) {
 
-    // 📖 EVENTOS DE LECTURA (Queries)
+    
     on<LoadWellnessMetricByIdEvent>(_onLoadWellnessMetricByIdEvent);
     on<LoadWellnessMetricsByVehicleIdEvent>(_onLoadWellnessMetricsByVehicleIdEvent);
 
-    // ✏️ EVENTOS DE ESCRITURA (Commands)
+    
     on<CreateWellnessMetricEvent>(_onCreateWellnessMetricEvent);
     on<UpdateWellnessMetricEvent>(_onUpdateWellnessMetricEvent);
     on<DeleteWellnessMetricEvent>(_onDeleteWellnessMetricEvent);
@@ -45,7 +45,7 @@ class WellnessMetricBloc  extends Bloc<WellnessMetricEvent, WellnessMetricState>
 
   }
 
-  // 📖 HANDLERS PARA QUERIES
+  
 
   Future<void> _onLoadWellnessMetricByIdEvent(
       LoadWellnessMetricByIdEvent event,
@@ -84,7 +84,7 @@ class WellnessMetricBloc  extends Bloc<WellnessMetricEvent, WellnessMetricState>
     }
   }
 
-  // ✏️ HANDLERS PARA COMMANDS
+  
 
   Future<void> _onCreateWellnessMetricEvent(
       CreateWellnessMetricEvent event,
@@ -106,34 +106,34 @@ class WellnessMetricBloc  extends Bloc<WellnessMetricEvent, WellnessMetricState>
       UpdateWellnessMetricEvent event,
       Emitter<WellnessMetricState> emit
       ) async {
-    // Emitimos el estado de progreso con el ID
+    
     emit(UpdateWellnessMetricInProgress(wellnessMetricId: event.wellnessMetricId));
 
     try {
-      // Actualizar UI inmediatamente (optimistic update) - si tienes lista cargada
+      
       if (state is WellnessMetricsLoaded) {
         final currentState = state as WellnessMetricsLoaded;
         final updatedMetrics = currentState.metrics.map((m) {
           if (m.id == event.wellnessMetricId) {
-            return event.metric; // Actualizar localmente
+            return event.metric; 
           }
           return m;
         }).toList();
 
-        emit(WellnessMetricsLoaded(metrics: updatedMetrics)); // ✅ Actualización inmediata
+        emit(WellnessMetricsLoaded(metrics: updatedMetrics)); 
       }
 
       // Llamar al use case en segundo plano
       final updatedMetric = await _updateWellnessMetric(event.wellnessMetricId, event.metric);
 
-      // Emitir éxito con la métrica actualizada del servidor
+      
       emit(UpdateWellnessMetricSuccess(metric: updatedMetric));
 
     } catch (e) {
-      // Si hay error, revertir el cambio (si habíamos hecho optimistic update)
+      
       if (state is WellnessMetricsLoaded) {
         final currentState = state as WellnessMetricsLoaded;
-        // Aquí podrías revertir a los datos originales si es necesario
+        
         emit(WellnessMetricsLoaded(metrics: currentState.metrics));
       }
 
@@ -148,27 +148,27 @@ class WellnessMetricBloc  extends Bloc<WellnessMetricEvent, WellnessMetricState>
       DeleteWellnessMetricEvent event,
       Emitter<WellnessMetricState> emit
       ) async {
-    // Emitimos el estado de progreso con el ID
+    
     emit(DeleteWellnessMetricInProgress(wellnessMetricId: event.wellnessMetricId));
 
     try {
-      // Actualizar UI inmediatamente (optimistic update) - si tienes lista cargada
+      
       if (state is WellnessMetricsLoaded) {
         final currentState = state as WellnessMetricsLoaded;
         final updatedMetrics = currentState.metrics
             .where((m) => m.id != event.wellnessMetricId)
             .toList();
 
-        emit(WellnessMetricsLoaded(metrics: updatedMetrics)); // ✅ Actualización inmediata
+        emit(WellnessMetricsLoaded(metrics: updatedMetrics)); 
       }
 
-      // Llamar al use case en segundo plano
+      
       await _deleteWellnessMetric(event.wellnessMetricId);
 
       emit(DeleteWellnessMetricSuccess(wellnessMetricId: event.wellnessMetricId));
 
     } catch (e) {
-      // Si hay error, revertir el cambio (si habíamos hecho optimistic update)
+      
       if (state is WellnessMetricsLoaded) {
         final currentState = state as WellnessMetricsLoaded;
         emit(WellnessMetricsLoaded(metrics: currentState.metrics));
