@@ -195,7 +195,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       NewNotificationReceivedEvent event,
       Emitter<NotificationsState> emit,
       ) async {
-    print('📨 [BLOC] Nueva notificación recibida: ${event.notification.title}');
+    print('[BLOC] Nueva notificación recibida: ${event.notification.title}');
 
     
     emit(NewNotificationReceived(notification: event.notification));
