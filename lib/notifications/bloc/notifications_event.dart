@@ -2,7 +2,7 @@ part of 'notifications_bloc.dart';
 
 abstract class NotificationsEvent {}
 
-// 📖 EVENTOS DE LECTURA (Queries) - BASADOS EN NotificationService
+
 class LoadAllNotificationsEvent extends NotificationsEvent {}
 
 class LoadNotificationByIdEvent extends NotificationsEvent {
@@ -15,7 +15,7 @@ class LoadNotificationsByVehicleIdEvent extends NotificationsEvent {
   LoadNotificationsByVehicleIdEvent(this.vehicleId);
 }
 
-// ✏️ EVENTOS DE ESCRITURA (Commands) - BASADOS EN NotificationService
+
 class MarkNotificationAsReadEvent extends NotificationsEvent {
   final int notificationId;
   MarkNotificationAsReadEvent(this.notificationId);
@@ -37,15 +37,15 @@ class CreateNotificationEvent extends NotificationsEvent {
   });
 }
 
-// 🔗 EVENTOS DE WEBSOCKET - BASADOS EN NotificationWebSocketService
+
 class ConnectWebSocketEvent extends NotificationsEvent {
-  final int vehicleId; // ✅ NECESARIO - el servicio requiere vehicleId
+  final int vehicleId; 
   ConnectWebSocketEvent(this.vehicleId);
 }
 
 class DisconnectWebSocketEvent extends NotificationsEvent {}
 
 class NewNotificationReceivedEvent extends NotificationsEvent {
-  final NotificationModel notification; // ✅ Cambié a NotificationModel
+  final NotificationModel notification; 
   NewNotificationReceivedEvent(this.notification);
 }
